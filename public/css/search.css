@@ -1,0 +1,59 @@
+.inner-form {
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .basic-search {
+    padding: 20px;
+  }
+
+  .input-field {
+    position: relative;
+  }
+
+  .icon-wrap {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+  }
+
+  #search {
+    padding-left: 40px;
+    width: 100%;
+  }
+
+  .result-count {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+  }
+
+  .advance-search {
+    padding: 20px;
+    display: none;
+  }
+
+  .desc {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .row {
+    margin-bottom: 10px;
+  }
+
+  .input-select {
+    width: 100%;
+    position: relative;
+  }
+
+  .input-select select {
+    width: 100%;
+  }
+
