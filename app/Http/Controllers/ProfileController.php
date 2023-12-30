@@ -47,25 +47,6 @@ class ProfileController extends Controller
     
         return redirect()->route('profile.show')->with('status', 'profile-updated');
     }
-    
-    public function updateAvatar(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $user = $request->user();
-    
-        $userData = $request->validated();
-        
-        if ($request->hasFile('avatar')) {
-            $userData['avatar'] = $request->file('avatar')->store('avatars', 'public');
-        }
-    
-        $user->fill($userData);
-        $user->save();
-    
-
-        return redirect()->route('profile.show')->with('status', 'avatar-updated');
-
-    }
-
 
     private function updateEmailAndSendVerification($user, $newEmail)
     {

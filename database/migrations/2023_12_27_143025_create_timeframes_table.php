@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('timeframes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('field_id');
-            $table->date('date');
-            $table->time('time');
+            $table->dateTime('datetime');
             $table->string('status');
             $table->timestamps();
 

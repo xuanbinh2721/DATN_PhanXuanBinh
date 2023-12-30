@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('field_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('price_id');
-            $table->string('status');
+            $table->enum('status', [0, 1])->default(0); 
             $table->timestamps();
 
             $table->foreign('field_id')->references('id')->on('fields');

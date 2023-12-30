@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\SportTypeController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,27 +20,19 @@ use App\Http\Controllers\SportTypeController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/district/{provinceId}', [App\Http\Controllers\HomeController::class,'getDistricts']);
+Route::get('/ward/{districtId}',  [App\Http\Controllers\HomeController::class,'getWards']);   
+Route::get('/searchresults', [App\Http\Controllers\SearchController::class,'search'])->name('searchresults');
+Route::get('/field/{id}', [App\Http\Controllers\HomeController::class,'getFieldDetailById'])->name('field.details');
+
+
+
 
 Auth::routes(['verify' => true]);
 
-Route::middleware(['auth', 'verified'])->group(function () {
-
-});
-
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/district/{provinceId}', [App\Http\Controllers\HomeController::class,'getDistricts'])->name('district');
-    Route::get('/ward/{districtId}',  [App\Http\Controllers\HomeController::class,'getWards'])->name('ward');   
-    Route::get('/field/{id}', [App\Http\Controllers\FieldController::class,'getFieldDetailById'])->name('field.details');
-
-    // Route::group(['prefix' => 'customer'], function () {
-    //     Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
-    //     // Thêm các route khác cho phần người tìm thuê sân tại đây
-    // });
 
 
     // Route::group(['prefix' => 'provider'], function () {

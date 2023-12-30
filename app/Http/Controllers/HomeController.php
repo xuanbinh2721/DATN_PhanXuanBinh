@@ -10,15 +10,7 @@ use App\Models\Field;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
+
 
     /**
      * Show the application dashboard.
@@ -33,7 +25,6 @@ class HomeController extends Controller
         return view('home', compact('provinces', 'sportTypes'));
     }
 
-    
 
     public function getDistricts($provinceId)
     {
@@ -45,5 +36,23 @@ class HomeController extends Controller
     {
         $wards = Ward::where('district_id', $districtId)->get();
         return response()->json($wards);
-}
+    }
+    public function getFieldDetailById($id)
+    {
+        // Lấy thông tin của tỉnh/thành phố và loại thể thao để hiển thị
+        $provinces = Province::all();
+        $sportTypes = SportType::all();
+
+        // Lấy thông tin chi tiết của sân dựa trên ID
+        $fields = Field::with(['sportType', 'prices', 'ward', 'district', 'province'])
+            ->findOrFail($id);
+
+        // Kiểm tra xem sân có tồn tại không
+        if (!$fields) {
+            abort(404); // Nếu không tìm thấy sân, hiển thị trang 404
+        }
+
+        // Trả về view với dữ liệu cần thiết
+        return view('field.detail', compact('fields', 'provinces', 'sportTypes'));
+    }
 }

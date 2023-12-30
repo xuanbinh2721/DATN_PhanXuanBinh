@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('field_id');
-            $table->unsignedBigInteger('time_frame_id');
+            $table->unsignedBigInteger('time_frame_id')->unique();
             $table->integer('price');
             $table->timestamps();
 

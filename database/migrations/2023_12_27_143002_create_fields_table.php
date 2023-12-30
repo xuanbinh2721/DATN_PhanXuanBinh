@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('owner_id');
             $table->unsignedBigInteger('sport_type_id');
-            $table->unsignedBigInteger('image_id')->nullable();
             $table->string('name');
             $table->unsignedBigInteger('province_id');
             $table->unsignedBigInteger('district_id');
@@ -23,12 +22,11 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone_number');
             $table->text('description');
-            $table->string('status');
+            $table->enum('status', [0, 1])->default(0); 
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users');
             $table->foreign('sport_type_id')->references('id')->on('sporttypes'); 
-            $table->foreign('image_id')->references('id')->on('fieldimages'); 
             $table->foreign('province_id')->references('id')->on('provinces');
             $table->foreign('district_id')->references('id')->on('districts');
             $table->foreign('ward_id')->references('id')->on('wards');

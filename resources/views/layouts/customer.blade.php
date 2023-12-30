@@ -22,6 +22,7 @@
     <link href="{{ asset('css/admin.min.css')}}" rel="stylesheet">
     <link href="{{ asset('css/profile.css')}}" rel="stylesheet">
     <link href="{{ asset('css/search.css')}}" rel="stylesheet">
+    
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -112,6 +113,8 @@
         </div>
     </div>
 </div>
+
+
     <!-- Bootstrap core JavaScript -->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -121,6 +124,68 @@
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('js/admin.min.js') }}"></script>
 
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Bootstrap JS (make sure it's placed after Bootstrap CSS) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/search.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+          $('#province').change(function () {
+              var provinceId = $(this).val();
+      
+              if (provinceId) {
+                  $.ajax({
+                      url: '{{ url('/district/') }}/' + provinceId,
+                      type: 'GET',
+                      dataType: 'json',
+                      success: function (data) {
+                          $('#district').empty();
+                          $('#ward').empty();
+      
+                          $('#district').append('<option value="">Chọn quận/huyện</option>');
+                          $.each(data, function (key, value) {
+                            $('#district').append('<option value="' + value.id + '">' + value.prefix + " " + value.name + '</option>');
+                          });
+                      // Cập nhật phường/xã khi chọn tỉnh/thành phố
+                            updateWardDropdown();
+
+                      }
+                  });
+              } else {
+                  $('#district').empty();
+                  $('#ward').empty();
+                  $('#district').append('<option value="">Chọn quận/huyện</option>');
+                  $('#ward').append('<option value="">Chọn phường/xã</option>');
+              }
+          });
+        
+          $('#district').change(function () {
+            updateWardDropdown();
+          });
+          function updateWardDropdown(){
+              var districtId = $('#district').val();
+      
+              if (districtId) {
+                  $.ajax({
+                      url: '{{ url('/ward/') }}/'  + districtId,
+                      type: 'GET',
+                      dataType: 'json',
+                      success: function (data) {
+                          $('#ward').empty();
+                          $('#ward').append('<option value="">Chọn phường/xã</option>');
+                          $.each(data, function (key, value) {
+                            $('#ward').append('<option value="' + value.id + '">' + value.prefix + " " + value.name + '</option>');
+                          });
+                      }
+                  });
+              } else {
+                  $('#ward').empty();
+                  $('#ward').append('<option value="">Chọn phường/xã</option>');
+              }
+          }
+      });
+    </script>
 </body>
 
 </html>

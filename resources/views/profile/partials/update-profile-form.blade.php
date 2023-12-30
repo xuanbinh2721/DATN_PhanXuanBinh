@@ -28,12 +28,7 @@
         <div class="d-flex gap-4 align-items-center ">
             <button type="submit" class="btn btn-primary">{{ __('Lưu thông tin') }}</button>                        
                 @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text text-success mt-3"
+                <p class="text text-success mt-3"
                 >{{ __('Sửa thông tin thành công.') }}</p>
             @endif
         </div>
