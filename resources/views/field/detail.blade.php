@@ -52,6 +52,11 @@
                 <p>Địa chỉ: {{ $fields->address }}, {{ optional($fields->ward)->prefix }} {{ optional($fields->ward)->name }}, {{ optional($fields->district)->prefix }} {{ optional($fields->district)->name }}, {{ optional($fields->province)->name }} </p>
                 <p>Số điện thoại: {{ $fields->phone_number }}</p>
                 <p>Loại sân thể thao: {{ $fields->sportType->name }}</p>
+                <div class="col-md-12 mt-4 mb-3">
+                    <a class="btn btn-info text-light btn-add-to-cart-detail"  style="background-color:  rgb(58, 160, 180);" href="#">
+                        Đặt sân
+                    </a>
+                </div>
             </div>
             
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -60,16 +65,8 @@
         </div>
     </div>
     <hr>
-    <div class="row align-item-center text-center ">
-        <div class="col-md-12 mt-4">
-            <a class="btn btn-info text-light btn-add-to-cart-detail"  style="background-color:  rgb(58, 160, 180);" href="#">
-                Đặt sân
-            </a>
-        </div>
-    </div>
-    <a href="{{ route('home') }}" class="btn btn-primary mt-3 mb-3 justify-content-center">Quay lại</a>
+    
     {{-- <a href="{{ route('field.booking', ['id' => $field->id]) }}" class="btn btn-primary mt-3">Đặt sân</a> --}}
-    <hr>
 </div>
 @include('layouts.footer')
 

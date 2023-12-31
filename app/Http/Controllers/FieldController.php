@@ -13,6 +13,9 @@ use App\Models\Province;
 use App\Models\District;
 use App\Models\Ward;
 use App\Models\Field;
+use App\Models\FieldImage;
+use App\Models\SportType;
+
 
 class FieldController extends Controller
 {
@@ -34,19 +37,20 @@ class FieldController extends Controller
      */
     public function index()
     {
-        return view('field.index');
-    }
+        $sportTypes = SportType::all();
+        $fields = Field::where('owner_id', auth()->id())->get();
 
-    public function getFieldDetailById($id)
-    {
-        $fields = Field::find($id);
+        // Lấy thông tin chi tiết và ảnh của sân đầu tiên
+        $firstField = $fields->first();
 
-        if (!$fields) {
-            // Xử lý trường hợp không tìm thấy sân
-            abort(404);
+        // Kiểm tra xem có sân nào không
+        if ($firstField) {
+            $images = FieldImage::where('field_id', $firstField->id)->get();
+        } else {
+            $images = collect(); // Nếu không có sân, sử dụng collection trống
         }
 
-        return view('field.detail', compact('fields'));
-    }
+        return view('field.index', compact('fields', 'firstField', 'images','sportTypes'));
 
-}
+        }
+    }

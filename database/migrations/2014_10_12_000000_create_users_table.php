@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->enum('user_type', [0, 1])->default(0); 
+            $table->enum('user_type', [0,1,2])->default(0); 
             $table->rememberToken();
             $table->timestamps();
 

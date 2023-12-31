@@ -18,13 +18,18 @@
             <input class="form-control" name="email" id="inputEmailAddress" type="email" placeholder="Nhập email của bạn" value="{{ auth()->user()->email }}">
         </div>
         <div class="mb-3">
-            <label class="small mb-1" for="inputEmailAddress">Số Điện Thoại</label>                                    
+            <label class="small mb-1" for="inputPhoneNumber">Số Điện Thoại</label>                                    
             <input class="form-control" name="phone_number" id="inputPhoneNumber" type="tel" placeholder="Nhập số điện thoại của bạn" value="{{ auth()->user()->phone_number }}">
         </div>
         <div class="mb-3">
-            <label class="small mb-1" for="inputEmailAddress">Địa Chỉ</label>
+            <label class="small mb-1" for="inputAddress">Địa Chỉ</label>
             <input class="form-control" name="address" id="inputAddress" type="text" placeholder="Nhập địa chỉ của bạn" value="{{ auth()->user()->address }}">
         </div>
+        <div class="mb-3">
+            <label class="small mb-1" for="inputAddress">Ngày/Tháng/Năm sinh</label>
+            <input type="date" class="form-control" id="inputDateOfBirth" name="date_of_birth" placeholder="Nhập ngày/tháng/năm sinh của bạn" value="{{ auth()->user()->date_of_birth }}">
+        </div>
+
         <div class="d-flex gap-4 align-items-center ">
             <button type="submit" class="btn btn-primary">{{ __('Lưu thông tin') }}</button>                        
                 @if (session('status') === 'profile-updated')

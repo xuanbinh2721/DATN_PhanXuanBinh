@@ -17,7 +17,7 @@ body {
 .imgprofile {
     width: 257px;
     height: 257px;
-    object-fit: cover; 
+    object-fit: cover;
 }
 
 
@@ -28,12 +28,12 @@ body {
 
 
 .col-md-8 {
-    flex: 0 0 66.66667%; 
+    flex: 0 0 66.66667%;
 }
 
 
 .col-md-4 {
-    flex: 0 0 33.33333%; 
+    flex: 0 0 33.33333%;
 }
 
 
@@ -101,4 +101,14 @@ body {
     padding-right: 0;
     margin-left: 1rem;
     margin-right: 1rem;
+}
+
+.delete-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 0 0 0 5px;
+    color: red;
 }

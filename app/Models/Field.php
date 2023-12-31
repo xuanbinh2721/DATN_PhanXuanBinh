@@ -9,6 +9,24 @@ class Field extends Model
 {
     use HasFactory;
 
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'owner_id' ,
+        'name',
+        'phone_number' ,
+        'description' ,
+        'sport_type_id' ,
+        'province_id' ,
+        'district_id' ,
+        'ward_id' ,
+        'address' ,
+    ];
+
     public function fieldImages()
     {
         return $this->hasMany(FieldImage::class);

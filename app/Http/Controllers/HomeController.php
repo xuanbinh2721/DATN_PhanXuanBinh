@@ -7,6 +7,8 @@ use App\Models\Ward;
 use Illuminate\Http\Request;
 use App\Models\SportType;
 use App\Models\Field;
+use App\Models\FieldImage;
+
 
 class HomeController extends Controller
 {
@@ -54,5 +56,57 @@ class HomeController extends Controller
 
         // Trả về view với dữ liệu cần thiết
         return view('field.detail', compact('fields', 'provinces', 'sportTypes'));
+    }
+    public function registerField()
+    {
+        $provinces = Province::all();
+        $sportTypes = SportType::all();
+        return view('/registerfield', compact('provinces', 'sportTypes'));
+    }
+
+    public function addField(Request $request)
+    {
+        // Validate dữ liệu đầu vào
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:12',
+            'description' => 'required|string|max:255',
+            'sporttype' => 'required|exists:sporttypes,id',
+            'province' => 'required|exists:provinces,id',
+            'district' => 'required|exists:districts,id',
+            'ward' => 'required|exists:wards,id',
+            'address' => 'required|string|max:255',
+        ]);
+
+        $ownerId = $request-> user()->id;
+
+        $request->user()->update(['user_type' => '1']);
+        // Lưu thông tin sân vào bảng Field
+        $field = new Field([
+            'owner_id' => $ownerId,
+            'name' => $request->input('name'),
+            'phone_number' => $request->input('phone_number'),
+            'description' => $request->input('description'),
+            'sport_type_id' => $request->input('sporttype'),
+            'province_id' => $request->input('province'),
+            'district_id' => $request->input('district'),
+            'ward_id' => $request->input('ward'),
+            'address' => $request->input('address'),
+        ]);
+        $field->save();
+
+        // Lưu các ảnh vào bảng FieldImage
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('field_images', 'public');
+            $fieldImage = new FieldImage([
+                'field_id' => $field->id,
+                'image_name' => $path,
+            ]);
+            $fieldImage->save();
+        }
+
+
+        // Chuyển hướng hoặc trả về thông báo thành công tùy thuộc vào yêu cầu của bạn
+        return redirect()->route('field.index')->with('success', 'Đăng ký sân thành công!');
     }
 }

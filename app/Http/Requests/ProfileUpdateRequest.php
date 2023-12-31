@@ -27,6 +27,7 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'phone_number' => ['nullable', 'string', 'max:12'],
             'address' => ['nullable', 'string', 'max:255'],
+            'date_of_birth' => ['nullable', 'date', 'before_or_equal:' . now()],
         ];
     }
 

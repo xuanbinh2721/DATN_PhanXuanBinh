@@ -10,7 +10,7 @@
                 <div class="card-body">
                     @if (session('resent'))
                         <div class="alert alert-success" role="alert">
-                            {{ __('Mội eamil đã được gửi vào email của bạn! Vui lòng kiểm tra lại!.') }}
+                            {{ __('Mội email đã được gửi vào email của bạn! Vui lòng kiểm tra lại!.') }}
                         </div>
                     @endif
 

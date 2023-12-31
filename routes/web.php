@@ -32,17 +32,29 @@ Route::get('/field/{id}', [App\Http\Controllers\HomeController::class,'getFieldD
 Auth::routes(['verify' => true]);
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
 
 
-    // Route::group(['prefix' => 'provider'], function () {
-    //     Route::get('/dashboard', [ProviderController::class, 'dashboard'])->name('provider.dashboard');
-    //         Route::get('/field/profile', [ProfileController::class, 'index'])->name('profile.show');
-    // Route::put('/field/profile/updateInfo', [ProfileController::class, 'updateInfomation'])->name('profile.updateInfo');
-    // Route::put('/field/profile/password', [PasswordController::class, 'update'])->name('password.update');
+// Route cho người cho thuê
+    Route::group(['middleware' => 'checkUserType:1'], function () {
+        Route::get('/field', [FieldController::class, 'index'])->name('field.index');
+
+    });
+
+    // Route cho người thuê
+    Route::group(['middleware' => 'checkUserType:0'], function () {
+        Route::get('/registefield', [App\Http\Controllers\HomeController::class,'registerField'])->name('registerfield');
+        Route::put('/registefield/addfield', [App\Http\Controllers\HomeController::class,'addField'])->name('registerfield.add');
+
+    });
+
+    // // Route cho admin
+    // Route::group(['middleware' => 'checkUserType:2'], function () {
+    //     Route::get('/admin-dashboard', 'AdminController@index')->name('admin.index');
+
     // });
-    Route::get('/field', [FieldController::class, 'index'])->name('field.index');
-    
+
+
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show');
     Route::put('/profile/updateInfo', [ProfileController::class, 'updateInfomation'])->name('profile.updateInfo');
     Route::put('/profile/password', [PasswordController::class, 'update'])->name('password.update');

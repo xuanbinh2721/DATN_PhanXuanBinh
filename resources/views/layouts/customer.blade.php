@@ -37,9 +37,21 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <a class="navbar-nav nav-link  me-auto" href="{{ route('field.index') }}">
-                        Quản lý sân
-                    </a>
+                    @if(Auth::check())
+                        @if(auth()->user()->user_type == 1)
+                            <a class="navbar-nav nav-link me-auto" href="{{ route('field.index') }}">
+                                Quản lý sân
+                            </a>
+                        @elseif(auth()->user()->user_type == 0)
+                            <a class="navbar-nav nav-link me-auto" href="{{ route('registerfield') }}">
+                                Đăng ký cho thuê sân
+                            </a>
+                        @elseif(auth()->user()->user_type == 2)
+                            <a class="navbar-nav nav-link me-auto" href="{{ route('field.index') }}">
+                                Trang Admin
+                            </a>
+                        @endif
+                    @endif
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
