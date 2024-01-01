@@ -87,6 +87,8 @@
         <main class="container-fluid">
             @yield('content')
         </main>
+        
+        @include('layouts.footer')
     </div>
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">

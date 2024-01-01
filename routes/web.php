@@ -23,7 +23,7 @@ use App\Http\Controllers\SearchController;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/district/{provinceId}', [App\Http\Controllers\HomeController::class,'getDistricts']);
 Route::get('/ward/{districtId}',  [App\Http\Controllers\HomeController::class,'getWards']);   
-Route::get('/searchresults', [App\Http\Controllers\SearchController::class,'search'])->name('searchresults');
+Route::get('/searchresults', [App\Http\Controllers\HomeController::class,'search'])->name('searchresults');
 Route::get('/field/{id}', [App\Http\Controllers\HomeController::class,'getFieldDetailById'])->name('field.details');
 
 
@@ -34,10 +34,13 @@ Auth::routes(['verify' => true]);
 
 Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
 
-
-// Route cho người cho thuê
+    // Route cho người cho thuê
     Route::group(['middleware' => 'checkUserType:1'], function () {
         Route::get('/field', [FieldController::class, 'index'])->name('field.index');
+        Route::get('/field/{id}/edit',[FieldController::class, 'edit'])->name('field.editfield');
+        Route::put('/field/{id}',[FieldController::class, 'update'])->name('field.update');
+        Route::post('/field/changoff/{id}',[FieldController::class, 'changeOff'])->name('field.changeoff');
+        Route::post('/field/changeon/{id}',[FieldController::class, 'changeOn'])->name('field.changeon');
 
     });
 
@@ -53,7 +56,6 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
     //     Route::get('/admin-dashboard', 'AdminController@index')->name('admin.index');
 
     // });
-
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show');
     Route::put('/profile/updateInfo', [ProfileController::class, 'updateInfomation'])->name('profile.updateInfo');

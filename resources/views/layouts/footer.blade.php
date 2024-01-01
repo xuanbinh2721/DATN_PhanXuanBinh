@@ -56,7 +56,7 @@
                         <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
                         @foreach($sportTypes as $sportType)
                         <p>
-                            <a href="#!" class="text-dark">Sân {{ $sportType->name }}</a>
+                            <a href="#!" class="text-dark text-decoration-none">Sân {{ $sportType->name }}</a>
                         </p>
                         @endforeach
                     </div>
@@ -68,16 +68,16 @@
                         <h6 class="text-uppercase fw-bold">Menu</h6>
                         <hr class="mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; background-color: #7c4dff; height: 2px" />
                         <p>
-                            <a href="{{ url('/') }}" class="text-dark">Trang chủ</a>
+                            <a href="{{ url('/') }}" class="text-dark text-decoration-none">Trang chủ</a>
                         </p>
                         <p>
-                            <a href="#!" class="text-dark">Tài khoản</a>
+                            <a href="{{ url('/profile') }}" class="text-dark text-decoration-none">Tài khoản</a>
                         </p>
                         <p>
-                            <a href="#!" class="text-dark">Giới thiệu</a>
+                            <a href="#!" class="text-dark text-decoration-none">Giới thiệu</a>
                         </p>
                         <p>
-                            <a href="#!" class="text-dark">Liên hệ</a>
+                            <a href="#!" class="text-dark text-decoration-none">Liên hệ</a>
                         </p>
                     </div>
                     <!-- Grid column -->

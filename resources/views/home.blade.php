@@ -10,5 +10,4 @@
     @include('layouts.getfields')
   </div>
 </div>
-@include('layouts.footer')
 @endsection

@@ -16,7 +16,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ekko-lightbox@5.3.0/dist/ekko-lightbox.min.css">
+
   
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/admin.min.css')}}" rel="stylesheet">
@@ -31,8 +33,11 @@
     <div class="row">
         <nav class="navbar navbar-expand-md navbar-light hadow-sm" style="background: linear-gradient(0deg, #9FC7F7 0%, #9FC7F7 100%), #94B9FF;">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="nav-brand d-flex align-items-center justify-content-center text-decoration-none text-dark me-3 fs-3" href="{{ url('/') }}">
+                    <div class="sidebar-brand-icon rotate-n-15 ">
+                        <i class="fa fa-futbol"></i>
+                    </div>
+                    <div class="sidebar-brand-text">{{ config('app.name', 'Laravel') }} </div>
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -106,6 +111,8 @@
         <main class="container-fluid">
             @yield('content')
         </main>
+        
+        @include('layouts.footer')
     </div>
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -134,12 +141,14 @@
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{{ asset('js/admin.min.js') }}"></script>
-
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Bootstrap JS (make sure it's placed after Bootstrap CSS) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js"></script>
+
     <script src="{{ asset('js/search.js') }}"></script>
     <script>
         $(document).ready(function () {

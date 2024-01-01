@@ -11,12 +11,14 @@
                     class="card-img-top img-thumbnail img-fluid" alt="Image" style="height: 270px">
                 @else
                 <!-- Đường dẫn của ảnh mặc định hoặc ảnh 404 -->
-                <img src="{{ asset('path/to/default-image.jpg') }}" class="card-img-top img-thumbnail img-fluid" alt="Default Image">
+                <img src="{{ asset('storage/field_images/default.jpg') }}" class="card-img-top img-thumbnail img-fluid" alt="Default Image" style="height: 270px">
                 @endif
                 <div class="card-body">
                     <h5 class="card-title">{{ $field->name }}</h5>
                     <p class="card-text">{{ $field->description }}</p>
+                    <button class="btn btn-primary">Xem chi tiết</button>
                 </div>
+                
             </a>
         </div>
         @endforeach

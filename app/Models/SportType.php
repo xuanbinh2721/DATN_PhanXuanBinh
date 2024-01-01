@@ -9,7 +9,7 @@ class SportType extends Model
 {
     use HasFactory;
     protected $table = 'sporttypes';
-    
+
     public function fields()
     {
         return $this->hasMany(Field::class);

@@ -23,7 +23,7 @@ class HomeController extends Controller
     {
         $provinces = Province::all();
         $sportTypes = SportType::all();
-        $fields = Field::all();
+        $fields = Field::where('status', 0)->get();
         return view('home', compact('provinces', 'sportTypes'));
     }
 
@@ -39,6 +39,54 @@ class HomeController extends Controller
         $wards = Ward::where('district_id', $districtId)->get();
         return response()->json($wards);
     }
+
+
+
+    public function search(Request $request)
+    {
+        // Lấy các tham số từ biểu mẫu
+        $provinces = Province::all();
+        $sportTypes= SportType::all();
+        $keyword = request()->input('search');
+        $sportType = request()->input('sporttype');
+        $province = request()->input('province');
+        $district = request()->input('district');
+        $ward = request()->input('ward');
+        // Tạo truy vấn tìm kiếm
+        $query = Field::query();
+
+        // Thêm bộ lọc
+        if ($keyword) {
+            $query->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        if ($sportType) {
+            $query->where('sport_type_id', $sportType);
+        }
+
+        if ($province) {
+            $query->where('province_id', $province);
+        }
+
+        if ($district) {
+            $query->where('district_id', $district);
+        }
+        if ($ward) {
+            $query->where('ward_id', $ward);
+        }
+        
+        // Lấy kết quả
+        $results = $query->where('status', 0)->get();
+
+        if(!$keyword&&!$sportType&&!$province){
+            $results=  $fields = Field::where('status', 0)->get();
+        }
+        //   dd($results);
+        return view('searchresults', compact('results','sportTypes','provinces'));
+    }
+
+
+
     public function getFieldDetailById($id)
     {
         // Lấy thông tin của tỉnh/thành phố và loại thể thao để hiển thị
@@ -57,6 +105,10 @@ class HomeController extends Controller
         // Trả về view với dữ liệu cần thiết
         return view('field.detail', compact('fields', 'provinces', 'sportTypes'));
     }
+
+
+
+
     public function registerField()
     {
         $provinces = Province::all();

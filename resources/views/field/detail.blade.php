@@ -11,7 +11,9 @@
             @if ($fields->fieldImages && $fields->fieldImages->count() > 0)
                 {{-- Hiển thị ảnh đầu tiên --}}
                 <div class="col-md-6 mb-3">
-                    <img src="{{ asset('storage/' . $fields->fieldImages->first()->image_name) }}" alt="Image" class="img-fluid w-100" style="height: 444px">
+                    <a href="{{ asset('storage/' . $fields->fieldImages->first()->image_name) }}" data-toggle="lightbox">
+                    <img src="{{ asset('storage/' . $fields->fieldImages->first()->image_name) }}" alt="Image" class="img-fluid w-100"  style="height: 444px">
+                    </a>
                 </div>
                 <div class="col-md-6 mb-3">
                 {{-- Hiển thị các ảnh còn lại --}}
@@ -20,7 +22,9 @@
                         @foreach ($fields->fieldImages->slice(1, 4) as $subImage)
                             @if ($subImage)
                                 <div class="col-md-6 mb-2">
-                                    <img src="{{ asset('storage/' . $subImage->image_name) }}" alt="Image" class="img-fluid w-100" style="height: 217.75px">
+                                    <a href="{{ asset('storage/' . $subImage->image_name) }}" data-toggle="lightbox">
+                                        <img src="{{ asset('storage/' . $subImage->image_name) }}" alt="Image" class="img-fluid w-100"  style="height: 217.75px">
+                                    </a>
                                 </div>
                             @endif
                         @endforeach
@@ -68,6 +72,8 @@
     
     {{-- <a href="{{ route('field.booking', ['id' => $field->id]) }}" class="btn btn-primary mt-3">Đặt sân</a> --}}
 </div>
-@include('layouts.footer')
+
+
+
 
 @endsection
