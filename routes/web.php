@@ -8,6 +8,8 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\SportTypeController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\BookingController;
+use App\Models\BookingDetail;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,14 +35,34 @@ Auth::routes(['verify' => true]);
 
 
 Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
+    //profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show');
+    Route::put('/profile/updateInfo', [ProfileController::class, 'updateInfomation'])->name('profile.updateInfo');
+    Route::put('/profile/password', [PasswordController::class, 'update'])->name('password.update');
+    //booking
+    Route::get('/field/{id}/time-frames', [BookingController::class, 'getTimeFrames'])->name('field.time-frames');
+    Route::get('/field/{id}/get-price', [BookingController::class, 'getPrice'])->name('field.get-price');
+    Route::put('/field/{id}/booking', [BookingController::class, 'store'])->name('field.booking');
+    Route::get('/booking-details/{id}', [BookingController::class, 'getBookingDetailById'])->name('booking.detail');
+    Route::get('/booking-details/{id}/cancel', [BookingController::class, 'cancelBooking'])->name('booking.cancel');
+
+
 
     // Route cho người cho thuê
     Route::group(['middleware' => 'checkUserType:1'], function () {
         Route::get('/field', [FieldController::class, 'index'])->name('field.index');
+
+        Route::get('/field/schedules/schedule/{id}', [FieldController::class, 'getTime'])->name('field.schedule');
+        Route::put('/field/schedules/schedule/addTimeFrame/{id}', [FieldController::class, 'addTimeFrame'])->name('schedule.addTime');
+        Route::post('/field/schedules/schedule/updateTimeFrame/{id}', [FieldController::class, 'updateTimeFrame'])->name('schedule.upTime');
+        Route::get('/field/schedules/schedule/changelock/{id}',[FieldController::class, 'changeLock'])->name('schedule.changelock');
+
         Route::get('/field/{id}/edit',[FieldController::class, 'edit'])->name('field.editfield');
         Route::put('/field/{id}',[FieldController::class, 'update'])->name('field.update');
-        Route::post('/field/changoff/{id}',[FieldController::class, 'changeOff'])->name('field.changeoff');
-        Route::post('/field/changeon/{id}',[FieldController::class, 'changeOn'])->name('field.changeon');
+        Route::post('/field/changestatus/{id}',[FieldController::class, 'changeStatus'])->name('field.changestatus');
+
+
+
 
     });
 
@@ -48,7 +70,6 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
     Route::group(['middleware' => 'checkUserType:0'], function () {
         Route::get('/registefield', [App\Http\Controllers\HomeController::class,'registerField'])->name('registerfield');
         Route::put('/registefield/addfield', [App\Http\Controllers\HomeController::class,'addField'])->name('registerfield.add');
-
     });
 
     // // Route cho admin
@@ -57,9 +78,7 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
 
     // });
 
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show');
-    Route::put('/profile/updateInfo', [ProfileController::class, 'updateInfomation'])->name('profile.updateInfo');
-    Route::put('/profile/password', [PasswordController::class, 'update'])->name('password.update');
+
 });
 
 

@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('timeframes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('field_id');
-            $table->dateTime('datetime');
-            $table->string('status');
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->integer('price');
+            $table->enum('status', [0, 1])->default(0); 
             $table->timestamps();
 
             $table->foreign('field_id')->references('id')->on('fields');

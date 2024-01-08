@@ -15,13 +15,18 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('field_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('price_id');
-            $table->enum('status', [0, 1])->default(0); 
+            $table->unsignedBigInteger('time_frame_id');
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone_number');
+            $table->string('note')->nullable();
+            $table->enum('status', [0,1,2])->default(0); 
+            $table->enum('payment_method', [0,1,2])->default(0); 
             $table->timestamps();
 
             $table->foreign('field_id')->references('id')->on('fields');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('price_id')->references('id')->on('prices');
+            $table->foreign('time_frame_id')->references('id')->on('timeframes');
         });
     }
 

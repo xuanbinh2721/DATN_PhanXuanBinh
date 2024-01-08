@@ -37,7 +37,18 @@
     
     
 
-
+    @if(session('success'))
+    <div class="container-fluid mt-3">
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    </div>
+    @elseif(session('error'))
+    <div class="container-fluid mt-3">
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="col-md-12 product-description">
         <nav>
             <div class="nav nav-tabs  " id="nav-tab" role="tablist">
@@ -49,28 +60,62 @@
         </nav>
         <div class="tab-content mt-3 " id="nav-tabContent">
             <div class="tab-pane fade show active align-item-center text-center" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <strong class="fs-4">{{ $fields->name }}</strong>
+                <h1 class="fs-2 fw-bold"><strong>{{ $fields->name }}</strong></h1>
                 <p class="fs-5">
                     {{ $fields->description }}
                 </p>
-                <p>Địa chỉ: {{ $fields->address }}, {{ optional($fields->ward)->prefix }} {{ optional($fields->ward)->name }}, {{ optional($fields->district)->prefix }} {{ optional($fields->district)->name }}, {{ optional($fields->province)->name }} </p>
-                <p>Số điện thoại: {{ $fields->phone_number }}</p>
-                <p>Loại sân thể thao: {{ $fields->sportType->name }}</p>
+                <p class="fs-5">Địa chỉ: {{ $fields->address }}, {{ optional($fields->ward)->prefix }} {{ optional($fields->ward)->name }}, {{ optional($fields->district)->prefix }} {{ optional($fields->district)->name }}, {{ optional($fields->province)->name }} </p>
+                <p class="fs-5">Số điện thoại: {{ $fields->phone_number }}</p>
+                <p class="fs-5">Loại sân thể thao: {{ $fields->sportType->name }}</p>
+                <p class="fs-5 fw-bold">
+                    @php
+                        // Lấy giá của tất cả các TimeFrames của sân
+                        $prices = $fields->timeFrames->pluck('price')->toArray();
+    
+                        // Lọc ra các giá trị không null
+                        $validPrices = array_filter($prices, function ($price) {
+                            return $price !== null;
+                        });
+    
+                        // Lấy giá thấp nhất và giá cao nhất nếu mảng không rỗng
+                        $minPrice = !empty($validPrices) ? min($validPrices) : null;
+                        $maxPrice = !empty($validPrices) ? max($validPrices) : null;
+                    @endphp
+    
+                    @if ($minPrice < $maxPrice)
+                        Giá: {{ number_format($minPrice) }} - {{ number_format($maxPrice) }} VNĐ
+                    @elseif ($minPrice == $maxPrice)
+                        Giá: {{ number_format($minPrice) }} VNĐ
+                    @else
+                        Chưa có giá
+                    @endif
+                </p>
+    
                 <div class="col-md-12 mt-4 mb-3">
-                    <a class="btn btn-info text-light btn-add-to-cart-detail"  style="background-color:  rgb(58, 160, 180);" href="#">
+                    @auth
+                        @include('layouts.booking')
+                    @endauth
+                    @guest
+                    <a class="btn btn-info text-light btn-add-to-cart-detail"  style="background-color:  rgb(58, 160, 180);" href="{{ route('login') }}">
                         Đặt sân
                     </a>
+                    @endguest
+
                 </div>
             </div>
             
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                 <h4>Chưa có đánh giá</h4>
+                <div class="col-md-12 mt-4 mb-3 align-item-center text-center">
+                    <a class="btn btn-info text-light btn-add-to-cart-detail"  style="background-color:  rgb(58, 160, 180);" href="#">
+                        Đánh giá
+                    </a>
+                </div>
             </div>
         </div>
     </div>
     <hr>
     
-    {{-- <a href="{{ route('field.booking', ['id' => $field->id]) }}" class="btn btn-primary mt-3">Đặt sân</a> --}}
 </div>
 
 

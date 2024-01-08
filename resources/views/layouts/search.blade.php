@@ -14,7 +14,7 @@
                                 <div class="icon-wrap">
                                 <i class="fas fa-search"></i>
                                 </div>
-                                <input id="search" name="search" class="form-control mr-sm-2" type="search" aria-label="Search"
+                                <input id="search" name="search" class="form-control mr-sm-2" type="text" aria-label="Search"
                                 placeholder="Search...">
                                 
                                 <div class="result-count" id="advsearch" style="cursor: pointer">

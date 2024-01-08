@@ -21,7 +21,7 @@
                                             class="card-img-top img-thumbnail img-fluid" alt="Image" style="height: 270px">
                                         @else
                                         <!-- Đường dẫn của ảnh mặc định hoặc ảnh 404 -->
-                                        <img src="{{ asset('path/to/default-image.jpg') }}" class="card-img-top img-thumbnail img-fluid" alt="Default Image">
+                                        <img src="{{ asset('storage/field_images/default.jpg') }}" class="card-img-top img-thumbnail img-fluid" alt="Default Image">
                                         @endif
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $result->name }}</h5>

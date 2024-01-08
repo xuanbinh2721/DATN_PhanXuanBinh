@@ -23,8 +23,8 @@ class HomeController extends Controller
     {
         $provinces = Province::all();
         $sportTypes = SportType::all();
-        $fields = Field::where('status', 0)->get();
-        return view('home', compact('provinces', 'sportTypes'));
+        $fields = Field::where('status', 'LIKE', '0')->get();
+        return view('home', compact('fields','provinces', 'sportTypes'));
     }
 
 
@@ -46,44 +46,51 @@ class HomeController extends Controller
     {
         // Lấy các tham số từ biểu mẫu
         $provinces = Province::all();
-        $sportTypes= SportType::all();
-        $keyword = request()->input('search');
-        $sportType = request()->input('sporttype');
-        $province = request()->input('province');
-        $district = request()->input('district');
-        $ward = request()->input('ward');
+        $sportTypes = SportType::all();
+    
+        // Lấy giá trị từ biểu mẫu
+        $keyword = $request->input('search');
+        $sportType = $request->input('sporttype');
+        $province = $request->input('province');
+        $district = $request->input('district');
+        $ward = $request->input('ward');
+    
         // Tạo truy vấn tìm kiếm
         $query = Field::query();
-
+    
         // Thêm bộ lọc
         if ($keyword) {
-            $query->where('name', 'like', '%' . $keyword . '%');
+            $query->where('name', 'like', '%'.$keyword.'%');
         }
-
+    
         if ($sportType) {
             $query->where('sport_type_id', $sportType);
         }
-
+    
         if ($province) {
             $query->where('province_id', $province);
         }
-
+    
         if ($district) {
             $query->where('district_id', $district);
         }
+    
         if ($ward) {
             $query->where('ward_id', $ward);
         }
-        
+    
         // Lấy kết quả
-        $results = $query->where('status', 0)->get();
-
-        if(!$keyword&&!$sportType&&!$province){
-            $results=  $fields = Field::where('status', 0)->get();
+        $results = $query->where('status', '0')->get();
+    
+        // Nếu không có bất kỳ điều kiện nào được áp dụng, lấy tất cả
+        if (empty($keyword) && empty($sportType) && empty($province) && empty($district) && empty($ward)) {
+            $results = Field::where('status', '0')->get();
         }
-        //   dd($results);
-        return view('searchresults', compact('results','sportTypes','provinces'));
+    
+        return view('searchresults', compact('results', 'sportTypes', 'provinces'));
     }
+    
+    
 
 
 
@@ -94,14 +101,8 @@ class HomeController extends Controller
         $sportTypes = SportType::all();
 
         // Lấy thông tin chi tiết của sân dựa trên ID
-        $fields = Field::with(['sportType', 'prices', 'ward', 'district', 'province'])
+        $fields = Field::with(['sportType', 'timeFrames', 'ward', 'district', 'province'])
             ->findOrFail($id);
-
-        // Kiểm tra xem sân có tồn tại không
-        if (!$fields) {
-            abort(404); // Nếu không tìm thấy sân, hiển thị trang 404
-        }
-
         // Trả về view với dữ liệu cần thiết
         return view('field.detail', compact('fields', 'provinces', 'sportTypes'));
     }

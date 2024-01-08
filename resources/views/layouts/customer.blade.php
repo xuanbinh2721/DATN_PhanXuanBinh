@@ -60,6 +60,11 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
+                        @if(Auth::check())
+                            <a class="navbar-nav nav-link mt-1" href="{{ route('registerfield') }}">
+                                Quản lý đơn đặt
+                            </a>
+                        @endif
                         <!-- Authentication Links -->
                         @guest
                         @if (Route::has('login'))
@@ -141,7 +146,6 @@
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
     <!-- Custom scripts for all pages-->
-
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Bootstrap JS (make sure it's placed after Bootstrap CSS) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

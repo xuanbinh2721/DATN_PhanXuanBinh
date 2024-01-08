@@ -16,7 +16,8 @@ use App\Models\Ward;
 use App\Models\Field;
 use App\Models\FieldImage;
 use App\Models\SportType;
-
+use App\Models\TimeFrame;
+use Carbon\Carbon;
 
 class FieldController extends Controller
 {
@@ -54,6 +55,110 @@ class FieldController extends Controller
         return view('field.index', compact('fields', 'firstField', 'images','sportTypes'));
 
     }
+
+
+    
+    public function getTime($id)
+    {
+        $sportTypes = SportType::all();
+        $field = Field::find($id);
+        $timeFrames = TimeFrame::where('field_id', $id)->get();
+        return view('field.schedules.schedule',compact('field','sportTypes','timeFrames'));
+    }
+
+    public function addTimeFrame(Request $request,$id)
+    {
+        // Validate dữ liệu đầu vào
+        $request->validate([
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'date' => 'required|date',
+            'price' => 'required|numeric|min:0',
+        ]);
+        // Kiểm tra xem có khung giờ trùng lặp không
+        $existingTimeFrame = TimeFrame::where([
+            'field_id' => $id,
+            'start_time' => $request->input('start_time'),
+            'end_time' => $request->input('end_time'),
+            'date' => $request->input('date'), 
+        ])->first();
+    
+        // Nếu có khung giờ trùng lặp, trả về thông báo lỗi
+        if ($existingTimeFrame) {
+            return redirect()->route('field.schedule',$id)->with('error', 'Khung giờ đã tồn tại!');
+        }
+
+        // Nếu không có khung giờ trùng lặp, tạo một bản ghi mới trong CSDL
+        $newTimeFrame = new TimeFrame([
+            'field_id' => $id,
+            'start_time' => $request->input('start_time'),
+            'end_time' => $request->input('end_time'),
+            'date' => $request->input('date'),
+            'price' => $request->input('price'),
+        ]);
+        $newTimeFrame->save();
+        
+        // Chuyển hướng hoặc thực hiện các hành động khác sau khi tạo xong
+        return redirect()->route('field.schedule',$id)->with('status', 'add-time-frame');
+    }
+    
+    public function updateTimeFrame(Request $request, $id)
+    {
+        $request->validate([
+            'start_time1' => 'required',
+            'end_time1' => 'required',
+            'date1' => 'required|date',
+            'price1' => 'required|numeric|min:0',
+        ]);
+        
+        $timeFrame = TimeFrame::find($id);
+        // Kiểm tra xem thời gian đã tồn tại hay chưa
+        $existingTimeFrame = TimeFrame::where([
+            'start_time' => $request->input('start_time1'),
+            'end_time' => $request->input('end_time1'),
+            'date' => $request->input('date1'),
+        ])->where('id', '!=', $id)->first();
+    
+        // Nếu có khung giờ trùng lặp, trả về thông báo lỗi
+        if ($existingTimeFrame) {
+            return redirect()->route('field.schedule', $timeFrame->field_id)->with('error', 'Khung giờ đã tồn tại!');
+        }
+
+        // Nếu không có khung giờ trùng lặp, cập nhật thông tin trong CSDL
+
+        if ($timeFrame) {
+            // Nếu tìm thấy bản ghi, thực hiện các thao tác
+            $timeFrame->date = $request->input('date1');
+            $timeFrame->start_time = $request->input('start_time1');
+            $timeFrame->end_time = $request->input('end_time1');
+            $timeFrame->price = $request->input('price1');
+            $timeFrame->save();
+            
+            // Chuyển hướng hoặc thực hiện các hành động khác sau khi cập nhật xong
+            return redirect()->route('field.schedule', $timeFrame->field_id)->with('success', 'Cập nhật khung giờ thành công!');
+        }
+    
+        // Trường hợp không tìm thấy bản ghi
+        return redirect()->route('field.schedule', $timeFrame->field_id)->with('error', 'Không tìm thấy khung giờ cần cập nhật!');
+    }
+    
+    public function changeLock(Request $request,$id)
+    {
+        $timeFrame = TimeFrame::findOrFail($id);
+
+        if($timeFrame->status =='0'){
+            $timeFrame-> status = '1';
+            $timeFrame->save();
+            return redirect()->route('field.schedule', $timeFrame->field_id)->with('success', 'Cập nhật khung giờ thành công!');
+        }
+        if($timeFrame->status =='1'){
+            $timeFrame-> status = '0';
+            $timeFrame->save();
+            return redirect()->route('field.schedule', $timeFrame->field_id)->with('success', 'Cập nhật khung giờ thành công!');
+        }
+    }
+
+
 
     public function edit($id)
     {
@@ -106,19 +211,22 @@ class FieldController extends Controller
     // Chuyển hướng về trang danh sách sân
         return redirect()->route('field.index')->with('success', 'Cập nhật thông tin sân thành công!');
     }
-    public function changeOff(Request $request,$id)
+    public function changeStatus(Request $request,$id)
     {
         $field = Field::findOrFail($id);
-        $field-> status = '1';
-        $field->save();
-        return redirect()->route('field.index')->with('success', 'Cập nhật thông tin sân thành công!');
+
+        if($field->status =='0'){
+            $field-> status = '1';
+            $field->save();
+            return redirect()->route('field.index')->with('success', 'Cập nhật trạng thái sân thành công!');
+        }
+        if($field->status =='1'){
+            $field-> status = '0';
+            $field->save();
+            return redirect()->route('field.index')->with('success', 'Cập nhật trạng thái sân thành công!');
+        }
     }
 
-    public function changeOn(Request $request,$id)
-    {
-        $field = Field::findOrFail($id);
-        $field-> status = '0';
-        $field->save();
-        return redirect()->route('field.index')->with('success', 'Cập nhật thông tin sân thành công!');
-    }
+
+
 }

@@ -36,9 +36,9 @@ class Field extends Model
         return $this->belongsTo(SportType::class, 'sport_type_id');
     }
 
-    public function prices()
+    public function timeFrames()
     {
-        return $this->hasMany(Price::class, 'field_id');
+        return $this->hasMany(TimeFrame::class, 'field_id');
     }
     public function fields() {
         return $this->hasMany(Field::class, 'id'); 
