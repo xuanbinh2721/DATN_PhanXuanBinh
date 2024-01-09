@@ -23,4 +23,8 @@ class TimeFrame extends Model
         'price', 
 
     ];
+    public function bookingDetails()
+    {
+        return $this->hasMany(BookingDetail::class, 'time_frame_id');
+    }
 }

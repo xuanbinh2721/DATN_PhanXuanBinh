@@ -17,6 +17,8 @@ use App\Models\Field;
 use App\Models\FieldImage;
 use App\Models\SportType;
 use App\Models\TimeFrame;
+use App\Models\BookingDetail;
+
 use Carbon\Carbon;
 
 class FieldController extends Controller
@@ -56,8 +58,30 @@ class FieldController extends Controller
 
     }
 
-
+    public function getBooking($id)
+    {
+        $sportTypes = SportType::all();
+        $field = Field::find($id);
+        $bookings = BookingDetail::where('field_id', $id)->get();
+        return view('field.booking.index',compact('field','sportTypes','bookings'));
+    }
     
+    public function acceptBooking(Request $request,$id)
+    {
+        $booking = BookingDetail::findOrFail($id);
+        $booking-> status = '1';
+        $booking->save();
+        return redirect()->route('getbooking.index', $booking->field_id)->with('success', 'Xác nhận đơn đặt sân thành công!');
+    }
+    public function refuseBooking(Request $request,$id)
+    {
+        $booking = BookingDetail::findOrFail($id);
+        $booking-> status = '2';
+        $booking->save();
+        return redirect()->route('getbooking.index', $booking->field_id)->with('success', 'Hủy đơn đặt sân thành công!');
+    }
+
+
     public function getTime($id)
     {
         $sportTypes = SportType::all();
@@ -157,7 +181,7 @@ class FieldController extends Controller
             return redirect()->route('field.schedule', $timeFrame->field_id)->with('success', 'Cập nhật khung giờ thành công!');
         }
     }
-
+    
 
 
     public function edit($id)

@@ -101,7 +101,7 @@
 
         <!-- Copyright -->
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-            © 2023 Copyright: Phan Xuân Bình - 61TH3 - 1951064055
+            © 2024 Copyright: Phan Xuân Bình - 61TH3 - 1951064055
         </div>
         <!-- Copyright -->
     </footer>

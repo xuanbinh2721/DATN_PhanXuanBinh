@@ -26,6 +26,10 @@ class Field extends Model
         'ward_id' ,
         'address' ,
     ];
+    public function bookingDetails()
+    {
+        return $this->hasMany(BookingDetail::class, 'field_id');
+    }
 
     public function fieldImages()
     {

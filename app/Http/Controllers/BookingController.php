@@ -22,6 +22,16 @@ class BookingController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
+    public function index()
+    {
+        // Lấy danh sách các đơn đặt sân từ cơ sở dữ liệu
+        $bookingList = BookingDetail::where('user_id', auth()->user()->id)->get();
+        $sportTypes = SportType::all();
+        // Trả về view với danh sách đặt sân
+        return view('booking.index', compact('bookingList','sportTypes'));
+    }
+
+
     public function getTimeFrames(Request $request, $id)
     {
         $selectedDate = $request->input('date');
@@ -93,7 +103,7 @@ class BookingController extends Controller
         // Kiểm tra xem đã có đơn đặt trong cùng khung giờ chưa
         $existingBooking = BookingDetail::where('field_id', $id)
             ->where('time_frame_id', $selectedTimeFrame)
-            ->where('status', '!=', 2) // Đơn đặt không bị hủy
+            ->where('status', '=', '0') // Đơn đặt không bị hủy
             ->first();
 
         // Nếu đã có đơn đặt trong khung giờ và không bị hủy, thông báo lỗi
@@ -117,7 +127,8 @@ class BookingController extends Controller
 
         $newBooking->save();
         // Redirect or return a response as needed
-        return redirect()->back()->with('success', 'Đặt sân thành công!');
+        return redirect()->route('booking.detail',$newBooking->id)->with('success', 'Đặt sân thành công!');
 
     }
+    
 }

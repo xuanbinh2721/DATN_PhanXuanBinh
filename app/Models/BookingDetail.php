@@ -21,4 +21,14 @@ class BookingDetail extends Model
         'payment_method',
         'note',
     ];
+    public function timeFrames()
+    {
+        return $this->belongsTo(TimeFrame::class, 'time_frame_id');
+    }
+
+    public function field()
+    {
+        return $this->belongsTo(Field::class, 'field_id');
+    }
+
 }

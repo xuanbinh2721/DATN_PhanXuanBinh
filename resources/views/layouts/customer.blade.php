@@ -61,7 +61,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         @if(Auth::check())
-                            <a class="navbar-nav nav-link mt-1" href="{{ route('registerfield') }}">
+                            <a class="navbar-nav nav-link mt-1" href="{{ route('booking.index') }}">
                                 Quản lý đơn đặt
                             </a>
                         @endif

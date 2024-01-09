@@ -43,6 +43,8 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
     Route::get('/field/{id}/time-frames', [BookingController::class, 'getTimeFrames'])->name('field.time-frames');
     Route::get('/field/{id}/get-price', [BookingController::class, 'getPrice'])->name('field.get-price');
     Route::put('/field/{id}/booking', [BookingController::class, 'store'])->name('field.booking');
+
+    Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
     Route::get('/booking-details/{id}', [BookingController::class, 'getBookingDetailById'])->name('booking.detail');
     Route::get('/booking-details/{id}/cancel', [BookingController::class, 'cancelBooking'])->name('booking.cancel');
 
@@ -52,17 +54,18 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
     Route::group(['middleware' => 'checkUserType:1'], function () {
         Route::get('/field', [FieldController::class, 'index'])->name('field.index');
 
+        Route::get('/field/{id}/edit',[FieldController::class, 'edit'])->name('field.editfield');
+        Route::put('/field/{id}',[FieldController::class, 'update'])->name('field.update');
+        Route::post('/field/changestatus/{id}',[FieldController::class, 'changeStatus'])->name('field.changestatus');
+
         Route::get('/field/schedules/schedule/{id}', [FieldController::class, 'getTime'])->name('field.schedule');
         Route::put('/field/schedules/schedule/addTimeFrame/{id}', [FieldController::class, 'addTimeFrame'])->name('schedule.addTime');
         Route::post('/field/schedules/schedule/updateTimeFrame/{id}', [FieldController::class, 'updateTimeFrame'])->name('schedule.upTime');
         Route::get('/field/schedules/schedule/changelock/{id}',[FieldController::class, 'changeLock'])->name('schedule.changelock');
 
-        Route::get('/field/{id}/edit',[FieldController::class, 'edit'])->name('field.editfield');
-        Route::put('/field/{id}',[FieldController::class, 'update'])->name('field.update');
-        Route::post('/field/changestatus/{id}',[FieldController::class, 'changeStatus'])->name('field.changestatus');
-
-
-
+        Route::get('/field/booking/{id}', [FieldController::class, 'getBooking'])->name('getbooking.index');
+        Route::get('/field/booking/accept/{id}',[FieldController::class, 'acceptBooking'])->name('getbooking.accept');
+        Route::get('/field/booking/refuse/{id}',[FieldController::class, 'refuseBooking'])->name('getbooking.refuse');
 
     });
 

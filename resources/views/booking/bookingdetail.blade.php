@@ -38,6 +38,10 @@
                                 Hủy đặt
                             </a>
                             @endif
+                            <a type="button" class="btn ms-auto btn-primary fs-5" href="{{ url()->previous() }}">
+                                Quay lại
+                            </a>
+                            
                         </div>
                     </div>
                 </div>

@@ -60,7 +60,7 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{{ route('field.schedule',$field->id) }}">Quản lý lịch</a>
-                        <a class="collapse-item" href="">Quản lý đơn thuê</a>
+                        <a class="collapse-item" href="{{ route('getbooking.index',$field->id) }}">Quản lý đơn thuê</a>
                         <a class="collapse-item" href="">Quản lý đánh giá</a>
                     </div>
                 </div>
