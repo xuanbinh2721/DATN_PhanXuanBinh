@@ -27,4 +27,9 @@ class TimeFrame extends Model
     {
         return $this->hasMany(BookingDetail::class, 'time_frame_id');
     }
+    public function isAvailable()
+    {
+        // Kiểm tra để xác định khung giờ có sẵn hay không
+        return $this->status == '0';
+    }
 }

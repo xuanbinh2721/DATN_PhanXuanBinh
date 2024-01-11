@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-info text-light btn-add-to-cart-detail" data-toggle="modal" data-target="#modal-booking" style="background-color:  rgb(58, 160, 180);">
+<button type="button" class="btn btn-info text-light btn-add-to-cart-detail fs-5" data-toggle="modal" data-target="#modal-booking" style="background-color:  rgb(58, 160, 180);">
     Đặt sân
 </button>
 

@@ -51,9 +51,9 @@
                                 <input class="form-control" name="phone_number" id="inputPhoneNumber" type="tel" placeholder="Nhập số điện thoại sân của bạn" value="{{ $field->phone_number }}" required>
                             </div>
                             <div class="mb-3">
-                                <label class="small mb-1" for="inputDescription">Mô tả</label>
-                                <input class="form-control" name="description" id="inputDescription" type="text" placeholder="Nhập mô tả sân của bạn" value="{{ $field->description }}" required>
-                            </div>
+                                <label class="small mb-1" for="inputNote">Mô tả</label>
+                                <textarea class="form-control" name="description" id="inputDescription" placeholder="Nhập mô tả sân của bạn" required>{{ $field->description }}</textarea>
+                            </div>                            
                             <div class="input-field mb-3">
                                 <div class="input-select">
                                     <label class="small mb-1" for="inputDescription">Loại sân</label>

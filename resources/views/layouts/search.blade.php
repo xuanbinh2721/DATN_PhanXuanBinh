@@ -19,7 +19,7 @@
                                 
                                 <div class="result-count" id="advsearch" style="cursor: pointer">
                                 <i class="fa-solid fa-caret-down"></i>
-                                <span>Advanced Search</span>
+                                <span>Bộ lọc</span>
                                 </div>
 
                             </div>
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="advance-search" id="advancedSearch" style="display: none;">
-                        <span class="desc">Advanced Search</span>
+                        <span class="desc">Bộ lọc tìm kiếm</span>
                         <div class="row">
                         <div class="input-field mb-3">
                             <div class="input-select">

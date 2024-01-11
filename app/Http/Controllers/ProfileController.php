@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use App\Models\SportType;
+
 use Carbon\Carbon;
 
 class ProfileController extends Controller
@@ -21,9 +23,10 @@ class ProfileController extends Controller
 
     public function index(Request $request): View
     {
+        $sportTypes = SportType::all();
         return view('profile.index', [
             'user' => $request->user(),
-        ]);
+        ],compact('sportTypes'));
     }
 
     

@@ -69,16 +69,27 @@ class FieldController extends Controller
     public function acceptBooking(Request $request,$id)
     {
         $booking = BookingDetail::findOrFail($id);
-        $booking-> status = '1';
-        $booking->save();
-        return redirect()->route('getbooking.index', $booking->field_id)->with('success', 'Xác nhận đơn đặt sân thành công!');
+        $timeFrame = TimeFrame::where('id', $booking->time_frame_id)->first();
+        if($timeFrame){
+            $booking-> status = '1';
+            $timeFrame->status = '1';
+            $booking->save();
+            $timeFrame->save();
+            return redirect()->route('getbooking.index', $booking->field_id)->with('success', 'Xác nhận đơn đặt sân thành công!');
+        }
+        
     }
     public function refuseBooking(Request $request,$id)
     {
         $booking = BookingDetail::findOrFail($id);
-        $booking-> status = '2';
-        $booking->save();
-        return redirect()->route('getbooking.index', $booking->field_id)->with('success', 'Hủy đơn đặt sân thành công!');
+        $timeFrame = TimeFrame::where('id', $booking->time_frame_id)->first();
+        if($timeFrame){
+            $booking-> status = '2';
+            $timeFrame->status = '0';
+            $booking->save();
+            $timeFrame->save();
+            return redirect()->route('getbooking.index', $booking->field_id)->with('success', 'Hủy đơn đặt sân thành công!');
+        }
     }
 
 

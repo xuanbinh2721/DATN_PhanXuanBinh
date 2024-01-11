@@ -28,14 +28,17 @@
                             @endif
                             <div class="card-body">
                                 <h5 class="card-title">{{ $field->name }}</h5>
-                                <p class="card-text">{{ $field->description }}</p>
-                                @if ($minPrice< $maxPrice)
-                                    <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} - {{ number_format($maxPrice) }} VNĐ</p>
-                                @elseif ($minPrice == $maxPrice)
-                                    <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} VNĐ</p>
+                                <p class="card-text">Địa chỉ: {{ $field->address }}, {{ optional($field->ward)->name }}, {{ optional($field->district)->name }}, {{ optional($field->province)->name }}  </p>
+                                @if ($minPrice !== null && $maxPrice !== null)
+                                    @if ($minPrice < $maxPrice)
+                                        <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} - {{ number_format($maxPrice) }} VNĐ</p>
+                                    @elseif ($minPrice == $maxPrice)
+                                        <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} VNĐ</p>
+                                    @endif
                                 @else
                                     <p class="card-text fw-bold fs-4">Chưa có giá</p>
                                 @endif
+
                                 <button class="btn btn-primary">Xem chi tiết</button>
                             </div>
                         </a>

@@ -44,11 +44,10 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        // Lấy các tham số từ biểu mẫu
         $provinces = Province::all();
         $sportTypes = SportType::all();
     
-        // Lấy giá trị từ biểu mẫu
+        // Lấy giá trị từ form
         $keyword = $request->input('search');
         $sportType = $request->input('sporttype');
         $province = $request->input('province');
@@ -99,14 +98,19 @@ class HomeController extends Controller
         // Lấy thông tin của tỉnh/thành phố và loại thể thao để hiển thị
         $provinces = Province::all();
         $sportTypes = SportType::all();
-
+    
         // Lấy thông tin chi tiết của sân dựa trên ID
         $fields = Field::with(['sportType', 'timeFrames', 'ward', 'district', 'province'])
             ->findOrFail($id);
-        // Trả về view với dữ liệu cần thiết
-        return view('field.detail', compact('fields', 'provinces', 'sportTypes'));
-    }
+    
+        // Lấy danh sách các ngày có khung giờ trống
+        $availableDates = $fields->timeFrames->where('status', 0)->groupBy('date')->keys()->sort();
 
+    
+        // Trả về view với dữ liệu cần thiết
+        return view('field.detail', compact('fields', 'provinces', 'sportTypes', 'availableDates'));
+    }
+    
 
 
 
@@ -123,7 +127,7 @@ class HomeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'phone_number' => 'required|string|max:12',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string',
             'sporttype' => 'required|exists:sporttypes,id',
             'province' => 'required|exists:provinces,id',
             'district' => 'required|exists:districts,id',

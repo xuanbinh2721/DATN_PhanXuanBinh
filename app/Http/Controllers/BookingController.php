@@ -39,6 +39,7 @@ class BookingController extends Controller
         // Thực hiện truy vấn để lấy danh sách khung giờ cho ngày và sân đã chọn
         $timeFrames = TimeFrame:: where('date', $selectedDate)
             ->where('field_id', $id)
+            ->where('status', '=', '0')
             ->get();
 
         // Trả về danh sách khung giờ dưới dạng JSON
@@ -100,6 +101,10 @@ class BookingController extends Controller
 
         $selectedTimeFrame = $request->input('time_frame');
 
+        $timeFrame = TimeFrame::findOrFail($selectedTimeFrame);
+        if ($timeFrame->status == '1') {
+            return redirect()->back()->with('error', 'Khung giờ này đã bị đặt.');
+        }
         // Kiểm tra xem đã có đơn đặt trong cùng khung giờ chưa
         $existingBooking = BookingDetail::where('field_id', $id)
             ->where('time_frame_id', $selectedTimeFrame)

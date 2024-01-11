@@ -52,7 +52,7 @@
                                 Đăng ký cho thuê sân
                             </a>
                         @elseif(auth()->user()->user_type == 2)
-                            <a class="navbar-nav nav-link me-auto" href="{{ route('field.index') }}">
+                            <a class="navbar-nav nav-link me-auto" href="{{ route('admin.index') }}">
                                 Trang Admin
                             </a>
                         @endif

@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\SportTypeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookingController;
-use App\Models\BookingDetail;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,11 +75,11 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
         Route::put('/registefield/addfield', [App\Http\Controllers\HomeController::class,'addField'])->name('registerfield.add');
     });
 
-    // // Route cho admin
-    // Route::group(['middleware' => 'checkUserType:2'], function () {
-    //     Route::get('/admin-dashboard', 'AdminController@index')->name('admin.index');
+    // Route cho admin
+    Route::group(['middleware' => 'checkUserType:2'], function () {
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
-    // });
+    });
 
 
 });

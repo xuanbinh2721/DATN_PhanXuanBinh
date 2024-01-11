@@ -59,8 +59,9 @@
             </div>
         </nav>
         <div class="tab-content mt-3 " id="nav-tabContent">
-            <div class="tab-pane fade show active align-item-center text-center" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <h1 class="fs-2 fw-bold"><strong>{{ $fields->name }}</strong></h1>
+            <div class="tab-pane fade show active " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="align-item-center text-center">
+                    <h1 class="fs-2 fw-bold"><strong>{{ $fields->name }}</strong></h1>
                 <p class="fs-5">
                     {{ $fields->description }}
                 </p>
@@ -82,16 +83,49 @@
                         $maxPrice = !empty($validPrices) ? max($validPrices) : null;
                     @endphp
     
-                    @if ($minPrice < $maxPrice)
-                        Giá: {{ number_format($minPrice) }} - {{ number_format($maxPrice) }} VNĐ
-                    @elseif ($minPrice == $maxPrice)
-                        Giá: {{ number_format($minPrice) }} VNĐ
+                    @if ($minPrice !== null && $maxPrice !== null)
+                        @if ($minPrice < $maxPrice)
+                            <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} - {{ number_format($maxPrice) }} VNĐ</p>
+                        @elseif ($minPrice == $maxPrice)
+                            <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} VNĐ</p>
+                        @endif
                     @else
-                        Chưa có giá
+                        <p class="card-text fw-bold fs-4">Chưa có giá</p>
                     @endif
                 </p>
-    
-                <div class="col-md-12 mt-4 mb-3">
+                </div>
+                <hr>
+                <p class="fs-4">Khung giờ trống hiện có</p>
+                    <ul class="nav  nav-tabs" id="myTab" role="tablist">
+                        @foreach ($availableDates as $date)
+                            @if(\Carbon\Carbon::now()->lessThanOrEqualTo(\Carbon\Carbon::parse($date)))
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link @if ($loop->first) active @endif" id="{{ Str::slug($date) }}-tab" data-bs-toggle="tab" data-bs-target="#{{ Str::slug($date) }}" type="button" role="tab" aria-controls="{{ Str::slug($date) }}" aria-selected="@if ($loop->first) true @else false @endif">{{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}
+                                    </button>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                
+                    <div class="tab-content" id="myTabContent">
+                        @foreach ($availableDates as $date)
+                            @if(\Carbon\Carbon::now()->lessThanOrEqualTo(\Carbon\Carbon::parse($date)))
+                                <div class="tab-pane fade @if ($loop->first) show active @endif" id="{{ Str::slug($date) }}" role="tabpanel" aria-labelledby="{{ Str::slug($date) }}-tab">
+                                    <h3 class="mt-2">Lịch sân trống ngày {{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}</h3>
+                                    <ul class="list-group">
+                                        @foreach ($fields->timeFrames->where('date', $date)->where('status', 0)->sortBy('start_time') as $timeFrame)
+                                            <li class="list-group-item mb-2 rounded">
+                                                {{ $timeFrame->start_time }} - {{ $timeFrame->end_time }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+            
+            
+                <div class="col-md-12 mt-4 mb-3 align-item-center text-center">
                     @auth
                         @include('layouts.booking')
                     @endauth
