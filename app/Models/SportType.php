@@ -18,5 +18,6 @@ class SportType extends Model
     protected $fillable = [
         'name',
         'description',
+        'status,'
     ];
 }

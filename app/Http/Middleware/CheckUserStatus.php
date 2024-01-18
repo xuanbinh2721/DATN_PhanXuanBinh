@@ -18,7 +18,7 @@ class CheckUserStatus
         $user = auth()->user();
 
         if ($user && $user->status === 'inactive') {
-            return redirect('/')->with('error', 'Tài khoản của bạn không hoạt động.');
+            return redirect('/')->with('error', 'Tài khoản của bạn đang bị khóa.');
         }
 
         return $next($request);

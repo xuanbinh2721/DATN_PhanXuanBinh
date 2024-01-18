@@ -36,7 +36,7 @@
                             <div class="ml-2">
                                 <h6 class="mb-3 mt-3 text-dark">{{ $booking->field->name }}</h6>
                                 <div class="d-flex flex-row mt-1 text-black-50 date-time mb-3">
-                                    <div><i class="fa fa-calendar"></i><span class="ml-2">{{ $booking->timeFrames->date }} </span></div>
+                                    <div><i class="fa fa-calendar"></i><span class="ml-2">{{ \Carbon\Carbon::parse($booking->timeFrames->date)->format('d/m/Y') }} </span></div>
                                     <div class="ml-3 "><i class="fa fa-clock"></i><span class="ml-2">{{ $booking->timeFrames->start_time }} - {{ $booking->timeFrames->end_time }}</span></div>
                                     <div class="ml-3"><i class="fa-solid fa-money-bill"></i><span class="ml-2">{{ number_format($booking->timeFrames->price) }}VNĐ</span></div>
                                 </div>

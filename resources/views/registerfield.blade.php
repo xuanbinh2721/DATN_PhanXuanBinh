@@ -76,7 +76,7 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="small mb-1" for="inputAddress">Địa Chỉ</label>
+                                <label class="small mb-1" for="inputAddress">Địa Chỉ Chi Tiết</label>
                                 <input class="form-control" name="address" id="inputAddress" type="text" placeholder="Nhập địa chỉ sân của bạn" required>
                             </div>
                         <div class="row third">

@@ -67,7 +67,7 @@
                             </div>
                             <div class="input-field mb-3">
                                 <div class="input-select">
-                                    <label class="small mb-1" for="inputDescription">Tỉnh/Thành phố</label>
+                                    <label class="small mb-1" for="inputDescription">Chọn Tỉnh/Thành phố</label>
                                     <select data-trigger="" name="province" class="form-select" id="province" required>
                                         <option value="">Chọn tỉnh/thành phố</option>
                                         @foreach($provinces as $province)
@@ -78,7 +78,7 @@
                             </div>
                             <div class="input-field mb-3">
                                 <div class="input-select">
-                                    <label class="small mb-1" for="inputDescription">Quận/Huyện</label>
+                                    <label class="small mb-1" for="inputDescription">Chọn Quận/Huyện</label>
                                     <select data-trigger="" name="district" class="form-select" id="district" required>
                                         @foreach($districts as $district)
                                             <option value="{{ $district->id }}" {{ $field->district_id == $district->id ? 'selected' : '' }}>{{ $district->name }}</option>
@@ -88,7 +88,7 @@
                             </div>
                             <div class="input-field mb-3">
                                 <div class="input-select">
-                                    <label class="small mb-1" for="inputDescription">Phường/Xã</label>
+                                    <label class="small mb-1" for="inputDescription">Chọn Phường/Xã</label>
                                         <select data-trigger="" name="ward" class="form-select" id="ward" required>
                                         @foreach($wards as $ward)
                                             <option value="{{ $ward->id }}" {{ $field->ward_id == $ward->id ? 'selected' : '' }}>{{ $ward->name }}</option>
@@ -97,7 +97,7 @@
                                 </div>
                             </div>                            
                             <div class="mb-3">
-                                <label class="small mb-1" for="inputAddress">Địa Chỉ</label>
+                                <label class="small mb-1" for="inputAddress">Địa Chỉ Chi Tiết</label>
                                 <input class="form-control" name="address" id="inputAddress" type="text" placeholder="Nhập địa chỉ sân của bạn" value="{{ $field->address }}" required>
                             </div>
 

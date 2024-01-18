@@ -12,6 +12,19 @@
             <div class="row ">
                 @if ($results && $results->count() > 0)
                     @foreach($results as $result)
+                    @php
+                    // Lấy giá của tất cả các timeFrames của sân
+                    $prices = $result->timeFrames->pluck('price')->toArray();
+                
+                    // Lọc ra các giá trị không null
+                    $validPrices = array_filter($prices, function ($price) {
+                        return $price !== null;
+                    });
+                
+                    // Tính giá thấp nhất và giá cao nhất nếu mảng không rỗng
+                    $minPrice = !empty($validPrices) ? min($validPrices) : null;
+                    $maxPrice = !empty($validPrices) ? max($validPrices) : null;
+                @endphp
                         @if ($result->fields && $result->fields->count() > 0)
                             @foreach($result->fields->take(8) as $field)
                                 <div class="col-md-3 mt-4 mb-4">
@@ -25,7 +38,17 @@
                                         @endif
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $result->name }}</h5>
-                                            <p class="card-text">{{ $result->description }}</p>
+                                            <p class="card-text">Địa chỉ: {{ $result->address }}, {{ optional($result->ward)->name }}, {{ optional($result->district)->name }}, {{ optional($result->province)->name }}  </p>
+                                            @if ($minPrice !== null && $maxPrice !== null)
+                                                @if ($minPrice < $maxPrice)
+                                                    <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} - {{ number_format($maxPrice) }} VNĐ</p>
+                                                @elseif ($minPrice == $maxPrice)
+                                                    <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} VNĐ</p>
+                                                @endif
+                                            @else
+                                                <p class="card-text fw-bold fs-4">Chưa có giá</p>
+                                            @endif
+            
                                             <button class="btn btn-primary">Đặt ngay</button>
                                         </div>
                                     </a>

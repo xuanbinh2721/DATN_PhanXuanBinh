@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('field_id');
-            $table->text('feedback');
+            $table->text('feedback')->nullable();
             $table->integer('rate');
+            $table->enum('status', [0, 1])->default(0); 
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

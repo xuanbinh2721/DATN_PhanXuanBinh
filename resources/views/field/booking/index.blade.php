@@ -38,8 +38,9 @@
                             <th>Ngày đặt</th>
                             <th>Khung giờ</th>
                             <th>Giá</th>
-                            <th>Xem thông tin</th>
-                            <th>Tình trạng</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
 
                         </tr>
                     </thead>
@@ -51,8 +52,9 @@
                             <th>Ngày đặt</th>
                             <th>Khung giờ</th>
                             <th>Giá</th>
-                            <th>Xem thông tin</th>
-                            <th>Tình trạng</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -65,9 +67,22 @@
                                 <td>{{ $booking->timeFrames->start_time }} - {{ $booking->timeFrames->end_time }}</td>
                                 <td>{{ $booking->timeFrames->price }}</td>
                                 <td>
-                                    <a type="button" class="btn" href="{{ route('booking.detail',$booking->id) }}">
-                                        <i class="fa fa-eye text-secondary "></i>
-                                    </a>
+                                    @if($booking->payment_method == '0')
+                                    <span class="text-info">Trực tiếp</span>                                    
+                                    @elseif($booking->status =='1')
+                                    <span class="text-info">Thẻ tín dụng</span>
+                                    @elseif($booking->status =='2')
+                                    <span class="text-info">Thẻ nội địa</span>
+                                    @endif  
+                                </td>
+                                <td>
+                                    @if($booking->status == '0')
+                                        <span class="text-primary">Đang chờ</span>                                    
+                                    @elseif($booking->status =='1')
+                                        <span class="text-success">Đã xác nhận</span>
+                                    @elseif($booking->status =='2')
+                                    <span class="text-danger">Đã hủy</span>
+                                    @endif          
                                 </td>
 
                                 <td>

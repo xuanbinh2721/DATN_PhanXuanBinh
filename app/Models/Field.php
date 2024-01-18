@@ -44,8 +44,13 @@ class Field extends Model
     {
         return $this->hasMany(TimeFrame::class, 'field_id');
     }
-    public function fields() {
-        return $this->hasMany(Field::class, 'id'); 
+    public function fields()
+    {
+        return $this->hasMany(Field::class, 'id');
+    }
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'field_id');
     }
 
     public function ward()

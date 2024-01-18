@@ -26,7 +26,7 @@
             <input class="form-control" name="address" id="inputAddress" type="text" placeholder="Nhập địa chỉ của bạn" value="{{ auth()->user()->address }}">
         </div>
         <div class="mb-3">
-            <label class="small mb-1" for="inputAddress">Ngày/Tháng/Năm sinh</label>
+            <label class="small mb-1" for="inputAddress">Ngày sinh</label>
             <input type="date" class="form-control" id="inputDateOfBirth" name="date_of_birth" placeholder="Nhập ngày/tháng/năm sinh của bạn" value="{{ auth()->user()->date_of_birth }}">
         </div>
 

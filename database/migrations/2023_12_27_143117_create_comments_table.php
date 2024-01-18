@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('feedback_id');
             $table->unsignedBigInteger('user_id');
             $table->text('comment');
+            $table->enum('status', [0, 1])->default(0); 
             $table->unsignedBigInteger('parent_comment')->nullable();
             $table->timestamps();
 

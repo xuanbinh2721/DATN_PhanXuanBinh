@@ -41,7 +41,7 @@ class FieldController extends Controller
      */
     public function index()
     {
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
         $fields = Field::where('owner_id', auth()->id())->get();
 
         // Lấy thông tin chi tiết và ảnh của sân đầu tiên
@@ -60,7 +60,7 @@ class FieldController extends Controller
 
     public function getBooking($id)
     {
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
         $field = Field::find($id);
         $bookings = BookingDetail::where('field_id', $id)->get();
         return view('field.booking.index',compact('field','sportTypes','bookings'));
@@ -95,7 +95,7 @@ class FieldController extends Controller
 
     public function getTime($id)
     {
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
         $field = Field::find($id);
         $timeFrames = TimeFrame::where('field_id', $id)->get();
         return view('field.schedules.schedule',compact('field','sportTypes','timeFrames'));
@@ -198,7 +198,7 @@ class FieldController extends Controller
     public function edit($id)
     {
         $field = Field::find($id);
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
         $provinces = Province::all();
         $districts = District::where('province_id', $field->province_id)->get();
         $wards = Ward::where('district_id', $field->district_id)->get();

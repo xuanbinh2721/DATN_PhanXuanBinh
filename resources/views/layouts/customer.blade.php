@@ -24,6 +24,7 @@
     <link href="{{ asset('css/admin.min.css')}}" rel="stylesheet">
     <link href="{{ asset('css/profile.css')}}" rel="stylesheet">
     <link href="{{ asset('css/search.css')}}" rel="stylesheet">
+
     
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -145,7 +146,6 @@
     <!-- Core plugin JavaScript-->
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-    <!-- Custom scripts for all pages-->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Bootstrap JS (make sure it's placed after Bootstrap CSS) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -153,7 +153,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bs5-lightbox@1.8.3/dist/index.bundle.min.js"></script>
 
-    <script src="{{ asset('js/search.js') }}"></script>
+    <script src="{{ asset('js/search.js')}}"></script>
+
     <script>
         $(document).ready(function () {
           $('#province').change(function () {
@@ -211,6 +212,67 @@
           }
       });
     </script>
+        <script>
+            function toggleFeedbackForm() {
+                var feedbackForm = document.getElementById('feedbackForm');
+                feedbackForm.style.display = (feedbackForm.style.display === 'none' || feedbackForm.style.display === '') ? 'block' : 'none';
+            }
+        </script>
+    <script>
+        function toggleCommentForm(feedbackId) {
+            var commentForm = document.getElementById('commentForm'+feedbackId);
+            commentForm.style.display = (commentForm.style.display === 'none' || commentForm.style.display === '') ? 'block' : 'none';
+        }
+
+    </script>
+        <script>
+        var $star_rating = $('.star-rating .fa-regular');
+        
+        var SetRatingStar = function() {
+          return $star_rating.each(function() {
+            if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+              return $(this).removeClass('fa-regular fa-star fs-5').addClass('fa fa-star text-warning fs-5');
+            } else {
+              return $(this).removeClass('fa fa-star text-warning fs-5').addClass('fa-regular fa-star fs-5');
+            }
+          });
+        };
+        
+        $star_rating.on('click', function() {
+          $star_rating.siblings('input.rating-value').val($(this).data('rating'));
+          return SetRatingStar();
+        });
+        
+        SetRatingStar();
+        </script>
+<script>
+    var $star_rating_edit = $('.star-rating-edit .star-rating-star');
+
+    var SetRatingStarEdit = function() {
+        return $star_rating_edit.each(function() {
+            var feedbackId = $(this).siblings('input.rating-value-edit').data('feedback-id');
+            if (parseInt($(this).siblings('input.rating-value-edit').val()) >= parseInt($(this).data('rating'))) {
+                $(this).removeClass('fa-regular fa-star fs-5').addClass('fa fa-star text-warning fs-5');
+            } else {
+                $(this).removeClass('fa fa-star text-warning fs-5').addClass('fa-regular fa-star fs-5');
+            }
+        });
+    };
+
+    $star_rating_edit.on('click', function() {
+        var feedbackId = $(this).siblings('input.rating-value-edit').data('feedback-id');
+        $star_rating_edit.filter('[data-feedback-id="' + feedbackId + '"]').removeClass('fa fa-star text-warning fs-5').addClass('fa-regular fa-star fs-5');
+        $(this).siblings('input.rating-value-edit').val($(this).data('rating'));
+        SetRatingStarEdit();
+    });
+
+    // Gọi hàm SetRatingStarEdit một lần nữa để thiết lập giá trị mặc định
+    SetRatingStarEdit();
+</script>
+
+
+
+    
 </body>
 
 </html>

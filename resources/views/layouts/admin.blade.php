@@ -30,7 +30,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" >
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/') }}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.index') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fa fa-hammer"></i>
                 </div>
@@ -41,13 +41,13 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link " href="{{ route('field.index') }}">
+            <li class="nav-item ">
+                <a class="nav-link " href="{{ route('admin.index') }}">
                     <i class="fa fa-fw fa-users"></i>
                     <span>Quản lý tài khoản</span></a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link " href="{{ route('field.index') }}">
+            <li class="nav-item">
+                <a class="nav-link " href="{{ route('sporttype.get') }}">
                     <i class="fa fa-fw fa-list"></i>
                     <span>Quản lý phân loại sân</span></a>
             </li>

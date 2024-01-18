@@ -26,7 +26,7 @@
                         <p class="mb-3 fs-5">Số điện thoại: {{ $bookingDetail->phone_number }}</p>
                         <p class="mb-3 fs-5">Sân: {{ $field->name }}</p>
 
-                        <p class="mb-3 fs-5">Khung giờ đặt sân: {{ $timeFrame->start_time }} - {{ $timeFrame->end_time }} - {{ $timeFrame->date }}</p>
+                        <p class="mb-3 fs-5">Khung giờ đặt sân: {{ $timeFrame->start_time }} - {{ $timeFrame->end_time }} - {{ \Carbon\Carbon::parse($timeFrame->date)->format('d/m/Y') }}</p>
                         <p class="mb-3 fs-5">Giá: {{ $timeFrame->price }}</p>
                         <p class="mb-3 fs-5">Phương thức thanh toán: {{ getPaymentMethodLabel($bookingDetail->payment_method) }}</p>
                         <p class="mb-3 fs-5 fw-bold">Tình trạng: {!! getStatusLabel($bookingDetail->status) !!}</p>

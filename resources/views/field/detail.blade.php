@@ -54,7 +54,9 @@
             <div class="nav nav-tabs  " id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-description-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">MÔ TẢ</button>
                 <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
-                    ĐÁNH GIÁ(0)
+                    ĐÁNH GIÁ(
+                    <span>{{ $fields->feedbacks->where('status','=','0')->count() }}</span> 
+                    )
                 </button>
             </div>
         </nav>
@@ -113,7 +115,7 @@
                                 <div class="tab-pane fade @if ($loop->first) show active @endif" id="{{ Str::slug($date) }}" role="tabpanel" aria-labelledby="{{ Str::slug($date) }}-tab">
                                     <h3 class="mt-2">Lịch sân trống ngày {{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}</h3>
                                     <ul class="list-group">
-                                        @foreach ($fields->timeFrames->where('date', $date)->where('status', 0)->sortBy('start_time') as $timeFrame)
+                                        @foreach ($fields->timeFrames->where('date', $date)->where('status', '0')->sortBy('start_time') as $timeFrame)
                                             <li class="list-group-item mb-2 rounded">
                                                 {{ $timeFrame->start_time }} - {{ $timeFrame->end_time }}
                                             </li>
@@ -130,7 +132,7 @@
                         @include('layouts.booking')
                     @endauth
                     @guest
-                    <a class="btn btn-info text-light btn-add-to-cart-detail"  style="background-color:  rgb(58, 160, 180);" href="{{ route('login') }}">
+                    <a class="btn btn-info text-light"  style="background-color:  rgb(58, 160, 180);" href="{{ route('login') }}">
                         Đặt sân
                     </a>
                     @endguest
@@ -139,20 +141,188 @@
             </div>
             
             <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <h4>Chưa có đánh giá</h4>
+                <div class="col-md-12 mt-4 mb-3  ">
+                    <h4 class="fw-bold">Đánh giá {{ $fields->name }}</h4>
+                    @if($fields->feedbacks->count() > 0)
+                    {{-- Tính điểm đánh giá trung bình --}}
+                    @php
+                        $averageRating = $fields->feedbacks->where('status','=','0')->avg('rate');
+                    @endphp
+        
+                    <p class="fs-5 text-info">Đánh giá: {{ number_format($averageRating, 1) }}/5</p>
+                    <hr>
+                    @foreach ($fields->feedbacks->where('status','=','0') as $feedback)
+                    <div class=" rounded border border-secondary">
+                        <div class="row mt-3 ms-3 ">
+                            <div class="col-md-10">
+                                <a class="mb-2 text-decoration-none">
+                                    <img class="img-profile rounded-circle" style="height: 32px; width: 32px;" src="{{ asset('storage/' . $feedback->user->avatar) }}">
+                                    <span class="mr-2 ">{{ $feedback->user->name }}</span>
+                                    @php
+                                    $isFieldOwner = $feedback->field->owner_id == $feedback->user_id;
+                                    $userBooked = \App\Models\BookingDetail::where('field_id', $feedback->field_id)
+                                        ->where('user_id', $feedback->user_id)
+                                        ->exists();
+                                @endphp
+                                    @if ($isFieldOwner && $userBooked)
+                                        <span class="rounded-pill border border-success text-center p-1 text-success">Chủ sân</span>      
+                                    @elseif ($isFieldOwner)
+                                        <span class="rounded-pill border border-success text-center p-1 text-success">Chủ sân</span>   
+                                    @elseif ($userBooked)
+                                        <span class="rounded-pill border border-success text-center p-1 text-success">Khách đã đặt sân</span>
+                                    @else
+                                        <span class="rounded-pill border border-primary text-center p-1">Khách chưa đặt sân</span>
+                                    @endif
+                                </a>
+                                <div class="star-rating mt-2">
+                                    <label for="rating">Đánh giá:</label>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $feedback->rate)
+                                            <span class="fa fa-star text-warning fs-5"></span>
+                                        @else
+                                            <span class="fa fa-regular fa-star"></span>
+                                        @endif
+                                    @endfor
+                                </div>
+                                <p class="mt-2 mb-3">{{ $feedback->feedback }}</p>
+                                @auth
+                                <a class="text-decoration-none" onclick="toggleCommentForm({{ $feedback->id }})" style="cursor: pointer">Bình luận</a>
+                                <div id="commentForm{{ $feedback->id }}" style="display: none;">
+                                    <div class="container-fluid ">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="card mt-2">
+                                                    <div class="card-body">
+                                                        <form action="" method="post">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="mb-3">
+                                                                <label for="feedback">Nội dung commment:</label>
+                                                                <textarea class="form-control" id="feedback" name="feedback" rows="1"></textarea>
+                                                            </div>
+                                                            <button type="submit float" class="btn btn-primary float-right">Bình luận</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endauth
+                                @guest
+                                <a class="text-decoration-none"  style="cursor: pointer" href="{{ route('login') }}">Bình luận</a>
+                                @endguest
+                            </div>
+                            <div class="col-md-2">
+                                @auth
+                                @if(auth()->user()->id == $feedback->user_id)
+                                <div class="dropdown">
+                                    <div id="advanced" class="float-right pe-3 fs-4" data-bs-toggle="dropdown">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </div>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advanced">
+                                       <a class="dropdown-item text-primary" data-bs-toggle="modal" data-bs-target="#modal-update-feedback{{ $feedback->id }}" style="cursor: pointer">Sửa</a>
+                                       <div class="dropdown-divider"></div>
+                                       <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $feedback->id }}" style="cursor: pointer">Xóa</a>
+                                    </div>
+                                 </div>
+                                 
+                                
+                                <!-- Modal sửa feedback -->
+                                <div class="modal fade" id="modal-update-feedback{{ $feedback->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Sửa đánh giá</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('field.updatefeedback',$feedback->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="star-rating-edit mb-3">
+                                                        <label for="ratingEdit{{ $feedback->id }} small">Điểm đánh giá:</label>
+                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="1"></span>
+                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="2"></span>
+                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="3"></span>
+                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="4"></span>
+                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="5"></span>
+                                                        <input type="hidden" name="rating" class="rating-value-edit" data-feedback-id="{{ $feedback->id }}" value="{{ $feedback->rate }}">
+                                                    </div>
+                                                    
+                                                    <div class="mb-3 ">
+                                                        <label class="small mb-1" for="inputDescription">Nội dung đánh giá</label>
+                                                        <textarea class="form-control" name="feedbackedit" id="inputDescription" type="text" placeholder="Nhập nội dung đánh giá">{{ $feedback->feedback }}</textarea>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Đóng</button>
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Modal xác nhận xóa feedback -->
+                                <div class="modal fade" id="confirmDeleteModal{{ $feedback->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn xóa đánh giá này không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Đóng</button>
+                                                <form action="{{ route('field.deletefeedback',$feedback->id) }}" method="GET">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                
+ 
+                                @endif
+                                @endauth
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    @endforeach
+                    @else
+                    <hr>
+                        <h4>Chưa có đánh giá nào</h4>
+                    @endif
+                </div>
+                @auth
+                @include('layouts.feedback')
+                @endauth
+                @guest
                 <div class="col-md-12 mt-4 mb-3 align-item-center text-center">
-                    <a class="btn btn-info text-light btn-add-to-cart-detail"  style="background-color:  rgb(58, 160, 180);" href="#">
+                    <a class="btn btn-info text-light" style="background-color:  rgb(58, 160, 180);" href="{{ route('login') }}">
                         Đánh giá
                     </a>
                 </div>
+                
+                @endguest
             </div>
+            
         </div>
     </div>
     <hr>
     
 </div>
-
-
 
 
 @endsection

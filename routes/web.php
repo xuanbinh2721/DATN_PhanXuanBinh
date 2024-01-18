@@ -10,6 +10,8 @@ use App\Http\Controllers\SportTypeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,13 +24,11 @@ use App\Http\Controllers\AdminController;
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/district/{provinceId}', [App\Http\Controllers\HomeController::class,'getDistricts']);
-Route::get('/ward/{districtId}',  [App\Http\Controllers\HomeController::class,'getWards']);   
-Route::get('/searchresults', [App\Http\Controllers\HomeController::class,'search'])->name('searchresults');
-Route::get('/field/{id}', [App\Http\Controllers\HomeController::class,'getFieldDetailById'])->name('field.details');
-
-
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/district/{provinceId}', [HomeController::class,'getDistricts']);
+Route::get('/ward/{districtId}',  [HomeController::class,'getWards']);   
+Route::get('/searchresults', [HomeController::class,'search'])->name('searchresults');
+Route::get('/field/{id}', [HomeController::class,'getFieldDetailById'])->name('field.details');
 
 
 Auth::routes(['verify' => true]);
@@ -47,6 +47,10 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
     Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
     Route::get('/booking-details/{id}', [BookingController::class, 'getBookingDetailById'])->name('booking.detail');
     Route::get('/booking-details/{id}/cancel', [BookingController::class, 'cancelBooking'])->name('booking.cancel');
+    //feedback
+    Route::put('/field/add-feedback/{id}', [UserController::class,'addFeedback'])->name('field.addfeedback');
+    Route::put('/field/upd-feedback/{id}', [UserController::class,'updateFeedback'])->name('field.updatefeedback');
+    Route::get('/field/del-feedback/{id}', [UserController::class,'deleteFeedback'])->name('field.deletefeedback');
 
 
 
@@ -71,14 +75,21 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
 
     // Route cho người thuê
     Route::group(['middleware' => 'checkUserType:0'], function () {
-        Route::get('/registefield', [App\Http\Controllers\HomeController::class,'registerField'])->name('registerfield');
-        Route::put('/registefield/addfield', [App\Http\Controllers\HomeController::class,'addField'])->name('registerfield.add');
+        Route::get('/registefield', [UserController::class,'registerField'])->name('registerfield');
+        Route::put('/registefield/addfield', [UserController::class,'addField'])->name('registerfield.add');
     });
 
     // Route cho admin
     Route::group(['middleware' => 'checkUserType:2'], function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::put('/admin/adduser', [AdminController::class, 'addUser'])->name('admin.adduser');
+        Route::post('/admin/updateuser/{id}', [AdminController::class, 'updateUser'])->name('admin.updateuser');
+        Route::get('/admin/chagelockuser/{id}', [AdminController::class, 'changeLockUser'])->name('admin.changelockuser');
 
+        Route::get('/admin/sporttype', [AdminController::class, 'getSportType'])->name('sporttype.get');
+        Route::put('/admin/addtype', [AdminController::class, 'addSportType'])->name('sporttype.addtype');
+        Route::post('/admin/updatetype/{id}', [AdminController::class, 'updateSportType'])->name('sporttype.updatetype');
+        Route::get('/admin/chagelocktype/{id}', [AdminController::class, 'changeLockSportType'])->name('sporttype.changelocktype');
     });
 
 
