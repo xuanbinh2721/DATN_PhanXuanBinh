@@ -67,7 +67,6 @@ class UserController extends Controller
         }
 
 
-        // Chuyển hướng hoặc trả về thông báo thành công tùy thuộc vào yêu cầu của bạn
         return redirect()->route('field.index')->with('success', 'Đăng ký sân thành công!');
     }
 
@@ -88,9 +87,6 @@ class UserController extends Controller
         ]);
         $feedback->save();
 
-
-        // (Tùy chọn) Cập nhật logic của bạn để xử lý bất kỳ điều gì khác, như gửi email thông báo, vv.
-
         return redirect()->back()->with('success', 'Đánh giá đã được gửi thành công!');
     }
     public function updateFeedback(Request $request,$id)
@@ -107,10 +103,6 @@ class UserController extends Controller
             $feedback->rate = $request->input('rating');
             $feedback->save();   
         }
-        
-
-
-        // (Tùy chọn) Cập nhật logic của bạn để xử lý bất kỳ điều gì khác, như gửi email thông báo, vv.
 
         return redirect()->back()->with('success', 'Đánh giá đã được sửa thành công!');
     }
@@ -135,5 +127,57 @@ class UserController extends Controller
 
     }
 
+    public function addComment(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        // Tìm đánh giá cần bình luận
+        $feedback = Feedback::findOrFail($id);
+
+        // Tạo comment mới và lưu vào cơ sở dữ liệu
+        $comment = new Comment([
+            'user_id' => auth()->user()->id,
+            'feedback_id' => $feedback->id,
+            'comment' => $request->input('comment'),
+
+        ]);
+
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Bình luận thành công.');
+    }
+
+    public function updateComment(Request $request,$id)
+    {
+        // Validate dữ liệu đầu vào từ form
+        $request->validate([
+            'comment' => 'nullable|string',
+        ]);
+
+        $comment= Comment::find($id);
+        if($comment){
+            $comment->comment = $request->input('commentedit');
+            $comment->save();   
+            return redirect()->back()->with('success', 'Bình luận đã được sửa thành công!');
+        }
+
+        
+    }
+
+    public function deleteComment(Request $request,$id)
+    {
+        $comment= Comment::find($id);
+        if (!$comment) {
+            return redirect()->back()->with('error', 'Bình luận không tồn tại!');
+        }
+    
+        $comment->status= '1';
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Bình luận đã được xóa thành công!');
+
+    }
 
 }

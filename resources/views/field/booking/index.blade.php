@@ -39,6 +39,7 @@
                             <th>Khung giờ</th>
                             <th>Giá</th>
                             <th>Thanh toán</th>
+                            <th>Lời nhắn</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
 
@@ -53,6 +54,7 @@
                             <th>Khung giờ</th>
                             <th>Giá</th>
                             <th>Thanh toán</th>
+                            <th>Lời nhắn</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
@@ -75,6 +77,7 @@
                                     <span class="text-info">Thẻ nội địa</span>
                                     @endif  
                                 </td>
+                                <td>{{ $booking->note }}</td>
                                 <td>
                                     @if($booking->status == '0')
                                         <span class="text-primary">Đang chờ</span>                                    
@@ -84,7 +87,6 @@
                                     <span class="text-danger">Đã hủy</span>
                                     @endif          
                                 </td>
-
                                 <td>
                                     @if($booking->status == '0')
                                     <a onclick="return confirm('Bạn có chắc chắn muốn đổi trạng thái này không ?')" type="button" class="btn ms-auto text-success" href="{{ route('getbooking.accept',$booking->id) }}">
@@ -95,12 +97,12 @@
                                     </a>
                                     
                                     @elseif($booking->status =='1')
-                                    <a onclick="return confirm('Bạn có chắc chắn muốn đổi trạng thái này không ?')" type="button" class="btn ms-auto text-danger" href="{{ route('getbooking.refuse',$booking->id) }}">
-                                        Hủy
+                                    <a  type="button" class="btn ms-auto text-warning" disabled>
+                                        Đã xác nhận
                                     </a>
                                     @elseif($booking->status =='2')
-                                    <a onclick="return confirm('Bạn có chắc chắn muốn đổi trạng thái này không ?')" type="button" class="btn ms-auto text-success" href="{{ route('getbooking.accept',$booking->id) }}">
-                                        Xác nhận
+                                    <a type="button" class="btn ms-auto text-warning" disabled>
+                                        Đã hủy
                                     </a>
                                     @endif                                    
                                 </td>

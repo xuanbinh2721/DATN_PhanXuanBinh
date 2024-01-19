@@ -60,11 +60,27 @@ class FieldController extends Controller
 
     public function getBooking($id)
     {
-        $sportTypes = SportType::where('status','=','0')->get();
+        $sportTypes = SportType::where('status', '=', '0')->get();
         $field = Field::find($id);
         $bookings = BookingDetail::where('field_id', $id)->get();
-        return view('field.booking.index',compact('field','sportTypes','bookings'));
+    
+        // Kiểm tra và xử lý đơn đặt sân chờ xác nhận
+        foreach ($bookings as $booking) {
+            if ($booking->status === '0') {
+                $timeFrame = TimeFrame::find($booking->time_frame_id);
+    
+                // Kiểm tra xem thời gian đặt đã quá thời gian hiện tại hay chưa
+                $bookingTime = Carbon::parse($timeFrame->date . ' ' . $timeFrame->start_time);
+                if ($bookingTime->isPast()) {
+                    // Đặt trạng thái của đơn đặt thành 'Đã hủy' 
+                    $booking->update(['status' => '2']);
+                }
+            }
+        }
+    
+        return view('field.booking.index', compact('field', 'sportTypes', 'bookings'));
     }
+    
     
     public function acceptBooking(Request $request,$id)
     {

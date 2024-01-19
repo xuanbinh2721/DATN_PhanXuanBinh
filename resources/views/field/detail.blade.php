@@ -155,7 +155,7 @@
                     <div class=" rounded border border-secondary">
                         <div class="row mt-3 ms-3 ">
                             <div class="col-md-10">
-                                <a class="mb-2 text-decoration-none">
+                                <strong class="mb-2">
                                     <img class="img-profile rounded-circle" style="height: 32px; width: 32px;" src="{{ asset('storage/' . $feedback->user->avatar) }}">
                                     <span class="mr-2 ">{{ $feedback->user->name }}</span>
                                     @php
@@ -173,7 +173,7 @@
                                     @else
                                         <span class="rounded-pill border border-primary text-center p-1">Khách chưa đặt sân</span>
                                     @endif
-                                </a>
+                                </strong>
                                 <div class="star-rating mt-2">
                                     <label for="rating">Đánh giá:</label>
                                     @for ($i = 1; $i <= 5; $i++)
@@ -186,25 +186,62 @@
                                 </div>
                                 <p class="mt-2 mb-3">{{ $feedback->feedback }}</p>
                                 @auth
-                                <a class="text-decoration-none" onclick="toggleCommentForm({{ $feedback->id }})" style="cursor: pointer">Bình luận</a>
+                                <a class="text-decoration-none me-2" onclick="toggleCommentForm({{ $feedback->id }})" style="cursor: pointer">
+                                    Bình luận
+                                </a>
                                 <div id="commentForm{{ $feedback->id }}" style="display: none;">
                                     <div class="container-fluid ">
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="card mt-2">
                                                     <div class="card-body">
-                                                        <form action="" method="post">
+                                                        <form action="{{ route('field.addcomment',$feedback->id) }}" method="post">
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="mb-3">
-                                                                <label for="feedback">Nội dung commment:</label>
-                                                                <textarea class="form-control" id="feedback" name="feedback" rows="1"></textarea>
+                                                                <label for="comment">Nội dung commment:</label>
+                                                                <textarea class="form-control" id="comment" name="comment" rows="1"></textarea>
                                                             </div>
                                                             <button type="submit float" class="btn btn-primary float-right">Bình luận</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="text-decoration-none text-info" onclick="toggleGetCommentForm({{ $feedback->id }})" style="cursor: pointer">
+                                    Xem bình luận({{ $feedback->comments->where('status','=','0')->count() }})
+                                </a>
+                                <div id="getCommentForm{{ $feedback->id }}" style="display: none;">
+                                    <div class="container-fluid ">
+                                        <div class="row">
+                                            @foreach ($feedback->comments->where('status','=','0') as $comment)
+                                            <div class="col-md-10 mt-2">
+                                                <div class="card mb-2 mt-2">
+                                                    <div class="row">
+                                                        <div class="col-md-10">
+                                                            <div class="mb-2 mt-2 card-body">
+                                                                <strong>
+                                                                    <img class="img-profile rounded-circle" style="height: 32px; width: 32px;" src="{{ asset('storage/' . $comment->user->avatar) }}">
+                                                                    <span>{{ $comment->user->name }}</span>
+                                                                    @if ($isFieldOwner && $userBooked)
+                                                                    <span class="rounded-pill border border-success text-center p-1 text-success">Chủ sân</span>      
+                                                                    @elseif ($isFieldOwner)
+                                                                    <span class="rounded-pill border border-success text-center p-1 text-success">Chủ sân</span> 
+                                                                    @endif
+                                                                    <span>:</span>
+                                                                </strong>
+                                                                {{ $comment->comment }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 ps-2 pt-2">
+                                                            @include('field.partials.editcomment')
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -215,85 +252,7 @@
                             </div>
                             <div class="col-md-2">
                                 @auth
-                                @if(auth()->user()->id == $feedback->user_id)
-                                <div class="dropdown">
-                                    <div id="advanced" class="float-right pe-3 fs-4" data-bs-toggle="dropdown">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </div>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="advanced">
-                                       <a class="dropdown-item text-primary" data-bs-toggle="modal" data-bs-target="#modal-update-feedback{{ $feedback->id }}" style="cursor: pointer">Sửa</a>
-                                       <div class="dropdown-divider"></div>
-                                       <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ $feedback->id }}" style="cursor: pointer">Xóa</a>
-                                    </div>
-                                 </div>
-                                 
-                                
-                                <!-- Modal sửa feedback -->
-                                <div class="modal fade" id="modal-update-feedback{{ $feedback->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Sửa đánh giá</h5>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="{{ route('field.updatefeedback',$feedback->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="star-rating-edit mb-3">
-                                                        <label for="ratingEdit{{ $feedback->id }} small">Điểm đánh giá:</label>
-                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="1"></span>
-                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="2"></span>
-                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="3"></span>
-                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="4"></span>
-                                                        <span class="fa-regular fa-star fs-5 star-rating-star" data-rating="5"></span>
-                                                        <input type="hidden" name="rating" class="rating-value-edit" data-feedback-id="{{ $feedback->id }}" value="{{ $feedback->rate }}">
-                                                    </div>
-                                                    
-                                                    <div class="mb-3 ">
-                                                        <label class="small mb-1" for="inputDescription">Nội dung đánh giá</label>
-                                                        <textarea class="form-control" name="feedbackedit" id="inputDescription" type="text" placeholder="Nhập nội dung đánh giá">{{ $feedback->feedback }}</textarea>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Đóng</button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Modal xác nhận xóa feedback -->
-                                <div class="modal fade" id="confirmDeleteModal{{ $feedback->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa đánh giá này không?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Đóng</button>
-                                                <form action="{{ route('field.deletefeedback',$feedback->id) }}" method="GET">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-danger">Xóa</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                
-                                
- 
-                                @endif
+                                    @include('field.partials.editfeedback')
                                 @endauth
                             </div>
                         </div>

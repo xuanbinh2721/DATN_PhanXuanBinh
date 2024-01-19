@@ -226,6 +226,13 @@
 
     </script>
         <script>
+            function toggleGetCommentForm(feedbackId) {
+                var getCommentForm = document.getElementById('getCommentForm'+feedbackId);
+                getCommentForm.style.display = (getCommentForm.style.display === 'none' || getCommentForm.style.display === '') ? 'block' : 'none';
+            }
+    
+        </script>
+        <script>
         var $star_rating = $('.star-rating .fa-regular');
         
         var SetRatingStar = function() {

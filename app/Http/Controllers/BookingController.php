@@ -9,7 +9,7 @@ use App\Models\Field;
 use App\Models\BookingDetail;
 use App\Models\SportType;
 use Illuminate\Support\Facades\Auth;
-
+use \Carbon\Carbon;
 class BookingController extends Controller
 {
     /**
@@ -27,6 +27,20 @@ class BookingController extends Controller
         // Lấy danh sách các đơn đặt sân từ cơ sở dữ liệu
         $bookingList = BookingDetail::where('user_id', auth()->user()->id)->get();
         $sportTypes = SportType::all();
+         // Kiểm tra và xử lý đơn đặt sân chờ xác nhận
+        foreach ($bookingList as $booking) {
+            if ($booking->status === '0') {
+                $timeFrame = TimeFrame::find($booking->time_frame_id);
+
+                // Kiểm tra xem thời gian đặt đã quá thời gian hiện tại hay chưa
+                $bookingTime = Carbon::parse($timeFrame->date . ' ' . $timeFrame->start_time);
+                if ($bookingTime->isPast()) {
+                    // Đặt trạng thái của đơn đặt thành 'Đã hủy' 
+                    $booking->update(['status' => '2']);
+                    // $timeFrame->update(['status'=>'0']);
+                }
+            }
+        }
         // Trả về view với danh sách đặt sân
         return view('booking.index', compact('bookingList','sportTypes'));
     }
@@ -105,18 +119,24 @@ class BookingController extends Controller
         if ($timeFrame->status == '1') {
             return redirect()->back()->with('error', 'Khung giờ này đã bị đặt.');
         }
+        
         // Kiểm tra xem đã có đơn đặt trong cùng khung giờ chưa
         $existingBooking = BookingDetail::where('field_id', $id)
-            ->where('time_frame_id', $selectedTimeFrame)
-            ->where('status', '=', '0') // Đơn đặt không bị hủy
-            ->first();
-
-        // Nếu đã có đơn đặt trong khung giờ và không bị hủy, thông báo lỗi
-        if ($existingBooking) {
-            return redirect()->back()->with('error', 'Không thể đặt sân trong khung giờ đã có đơn đặt khác.');
+            ->where('status', '!=', '2') // Đơn đặt không bị hủy
+            ->get();
+        
+        foreach ($existingBooking as $booking) {
+            $bookingTimeFrame = TimeFrame::find($booking->time_frame_id);
+            // Kiểm tra trùng lặp dựa trên date, start_time
+            if (
+                $bookingTimeFrame->date == $timeFrame->date &&
+                $bookingTimeFrame->start_time == $timeFrame->start_time 
+            ) {
+                return redirect()->back()->with('error', 'Không thể đặt sân trong khung giờ đã có đơn đặt khác.');
+            }
         }
+        
 
-        // Save booking detail to the database
         $newBooking = new BookingDetail([
             'field_id' => $id,
             'user_id' => auth()->user()->id,
@@ -131,7 +151,7 @@ class BookingController extends Controller
         ]);
 
         $newBooking->save();
-        // Redirect or return a response as needed
+
         return redirect()->route('booking.detail',$newBooking->id)->with('success', 'Đặt sân thành công!');
 
     }

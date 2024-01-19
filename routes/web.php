@@ -51,8 +51,10 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
     Route::put('/field/add-feedback/{id}', [UserController::class,'addFeedback'])->name('field.addfeedback');
     Route::put('/field/upd-feedback/{id}', [UserController::class,'updateFeedback'])->name('field.updatefeedback');
     Route::get('/field/del-feedback/{id}', [UserController::class,'deleteFeedback'])->name('field.deletefeedback');
-
-
+    //comment
+    Route::put('/field/{id}/comment', [UserController::class,'addComment'])->name('field.addcomment');
+    Route::put('/field/upd-comment/{id}', [UserController::class,'updateComment'])->name('field.updatecomment');
+    Route::get('/field/del-comment/{id}', [UserController::class,'deleteComment'])->name('field.deletecomment');
 
     // Route cho người cho thuê
     Route::group(['middleware' => 'checkUserType:1'], function () {
