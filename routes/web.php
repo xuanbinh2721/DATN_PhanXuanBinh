@@ -73,6 +73,9 @@ Route::middleware(['auth', 'verified', 'checkUserStatus'])->group(function () {
         Route::get('/field/booking/accept/{id}',[FieldController::class, 'acceptBooking'])->name('getbooking.accept');
         Route::get('/field/booking/refuse/{id}',[FieldController::class, 'refuseBooking'])->name('getbooking.refuse');
 
+        Route::get('/field/getrevenue/{id}', [FieldController::class, 'getRevenue'])->name('getrevenue.index');
+
+
     });
 
     // Route cho người thuê

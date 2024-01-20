@@ -22,6 +22,8 @@
     <link href="{{ asset('css/admin.min.css')}}" rel="stylesheet">
     <link href="{{ asset('css/profile.css')}}" rel="stylesheet">
     <!-- Scripts -->
+    <script src="{{ asset('vendor\chart.js\Chart.min.js') }}"></script>
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
@@ -41,7 +43,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link " href="{{ route('field.index') }}">
                     <i class="fas fa-fw fa-tachometer-alt "></i>
                     <span>Quản lý thông tin</span></a>
@@ -61,7 +63,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{{ route('field.schedule',$field->id) }}">Quản lý lịch</a>
                         <a class="collapse-item" href="{{ route('getbooking.index',$field->id) }}">Quản lý đơn thuê</a>
-                        <a class="collapse-item" href="">Quản lý đánh giá</a>
                     </div>
                 </div>
             </li>
@@ -74,8 +75,7 @@
                 </a>
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="utilities-color.html">Danh sách lịch sân trống</a>
-                        <a class="collapse-item" href="utilities-border.html">Thống kê doanh thu</a>
+                        <a class="collapse-item" href="{{ route('getrevenue.index',$field->id) }}">Thống kê doanh thu</a>
                     </div>
                 </div>
             </li>

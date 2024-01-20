@@ -41,7 +41,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item ">
+            <li class="nav-item">
                 <a class="nav-link " href="{{ route('admin.index') }}">
                     <i class="fa fa-fw fa-users"></i>
                     <span>Quản lý tài khoản</span></a>

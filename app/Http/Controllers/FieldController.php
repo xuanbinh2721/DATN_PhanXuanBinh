@@ -279,5 +279,27 @@ class FieldController extends Controller
     }
 
 
+    public function getRevenue($id)
+    {
+        $sportTypes = SportType::where('status','=','0')->get();
+        $field = Field::find($id);
+        // Lấy doanh thu hàng ngày từ BookingDetail và TimeFrame sử dụng Eloquent
+        $dailyRevenue = BookingDetail::join('timeframes', 'bookingdetails.time_frame_id', '=', 'timeframes.id')
+            ->selectRaw('DATE_FORMAT(timeframes.date, "%d/%m") as day_month, sum(timeframes.price) as revenue')
+            ->where('bookingdetails.field_id', $id)
+            ->where('bookingdetails.status', '=','1')
+            ->groupByRaw('day_month')
+            ->orderBy('timeframes.date')
+            ->get();
+        $monthlyRevenue = BookingDetail::join('timeframes', 'bookingdetails.time_frame_id', '=', 'timeframes.id')
+            ->selectRaw('DATE_FORMAT(timeframes.date, "%m/%Y") as month_year, sum(timeframes.price) as revenue')
+            ->where('bookingdetails.field_id', $id)
+            ->where('bookingdetails.status', '=','1')
+            ->groupByRaw('month_year')
+            ->orderBy('timeframes.date')
+            ->get();
+    
+        return view('field.revenue.index', compact('dailyRevenue','monthlyRevenue','sportTypes','field'));
+    }
 
 }
