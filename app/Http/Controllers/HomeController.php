@@ -22,7 +22,7 @@ class HomeController extends Controller
     public function index()
     {
         $provinces = Province::all();
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
         $fields = Field::where('status', 'LIKE', '0')->get();
         return view('home', compact('fields','provinces', 'sportTypes'));
     }
@@ -45,7 +45,8 @@ class HomeController extends Controller
     public function search(Request $request)
     {
         $provinces = Province::all();
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
+
     
         // Lấy giá trị từ form
         $keyword = $request->input('search');
@@ -97,7 +98,7 @@ class HomeController extends Controller
     {
         // Lấy thông tin của tỉnh/thành phố và loại thể thao để hiển thị
         $provinces = Province::all();
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
     
         // Lấy thông tin chi tiết của sân dựa trên ID
         $fields = Field::with(['sportType', 'timeFrames', 'ward', 'district', 'province'])

@@ -26,7 +26,8 @@ class BookingController extends Controller
     {
         // Lấy danh sách các đơn đặt sân từ cơ sở dữ liệu
         $bookingList = BookingDetail::where('user_id', auth()->user()->id)->get();
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
+
          // Kiểm tra và xử lý đơn đặt sân chờ xác nhận
         foreach ($bookingList as $booking) {
             if ($booking->status === '0') {
@@ -83,7 +84,8 @@ class BookingController extends Controller
         if (!$bookingDetail) {
             return redirect()->route('home');
         }
-        $sportTypes = SportType::all();
+        $sportTypes = SportType::where('status','=','0')->get();
+
         $field = Field::where('id',$bookingDetail->field_id)->first();
         $timeFrame = TimeFrame::where('id',$bookingDetail->time_frame_id)->first();
 

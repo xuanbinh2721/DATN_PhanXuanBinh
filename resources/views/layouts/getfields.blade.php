@@ -28,7 +28,7 @@
                             @endif
                             <div class="card-body">
                                 <h5 class="card-title">{{ $field->name }}</h5>
-                                <p class="card-text">Địa chỉ: {{ $field->address }}, {{ optional($field->ward)->name }}, {{ optional($field->district)->name }}, {{ optional($field->province)->name }}  </p>
+                                <p class="card-text">Địa chỉ:{{ optional($field->ward)->name }}, {{ optional($field->district)->name }}, {{ optional($field->province)->name }}  </p>
                                 @if ($minPrice !== null && $maxPrice !== null)
                                     @if ($minPrice < $maxPrice)
                                         <p class="card-text fw-bold fs-4">Giá: {{ number_format($minPrice) }} - {{ number_format($maxPrice) }} VNĐ</p>
