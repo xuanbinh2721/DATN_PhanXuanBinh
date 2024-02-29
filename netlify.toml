@@ -1,0 +1,3 @@
+[build]
+  command = "composer install --optimize-autoloader && php artisan migrate --force"
+  publish = "public"
